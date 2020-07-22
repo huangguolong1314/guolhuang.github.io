@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>luckyLong</title>
+  
+  
+  <link href="/atom.xml" rel="self"/>
+  
+  <link href="https://huangguolong1314.github.io/"/>
+  <updated>2020-07-22T04:34:17.602Z</updated>
+  <id>https://huangguolong1314.github.io/</id>
+  
+  <author>
+    <name>luckyLong</name>
+    
+  </author>
+  
+  <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>hexo + github 快速搭建博客</title>
+    <link href="https://huangguolong1314.github.io/2020/07/01/hello-world/"/>
+    <id>https://huangguolong1314.github.io/2020/07/01/hello-world/</id>
+    <published>2020-07-01T09:20:00.000Z</published>
+    <updated>2020-07-22T04:34:17.602Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="hexo-github-快速搭建博客"><a href="#hexo-github-快速搭建博客" class="headerlink" title="hexo + github 快速搭建博客"></a>hexo + github 快速搭建博客</h1><p>话不多说，咱们直接进入主题～</p><h2 id="1-新建城池"><a href="#1-新建城池" class="headerlink" title="1.新建城池"></a>1.新建城池</h2><p>既然要给人访问，如果没有存放代码的地方，既不是白日做梦了，首先上 全球最大同性交友网站 <code>github</code> 新建一个仓库，仓库名必须为 <code>&lt;user-name&gt;.github.io</code>, 其中 <code>&lt;user-name&gt;</code> 就是我们github的昵称，<br>注意必须一样，不能自定义，不要问我为什么，问了我也不会说。</p><h2 id="2-手握神器"><a href="#2-手握神器" class="headerlink" title="2.手握神器"></a>2.手握神器</h2><p>打开命令行，输入下面的命令，全局安装神奇 <code>hexo</code></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo -g</span><br></pre></td></tr></table></figure><h2 id="3-组建大军"><a href="#3-组建大军" class="headerlink" title="3. 组建大军"></a>3. 组建大军</h2><p><code>hexo</code> 神器使用口诀如下 急急如律令，嘿嘿哈。。。sorry sorry 跑题了，口诀如下，所有口诀掐完，紧跟 <code>hexo s</code>，之后在浏览器访问 <code>localhost:4000</code> 神器搭配，手速要快。</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hexo init &#x2F;&#x2F; 初始化</span><br><span class="line"></span><br><span class="line">hexo s &#x2F;&#x2F; 本地服务启动</span><br></pre></td></tr></table></figure><p>我们的文件夹下的文件,主要关注以下几个文件</p><ul><li>source 里面存放我们的页面和文章 _post 下都是文章，其他则为页面</li><li>themes 里面是我们下载的主题</li><li>public 里面是我们编译后的文件</li><li>_config.yml 全局的一些配置</li></ul><h2 id="4-神器，城池，大军都有，该去收割一波了"><a href="#4-神器，城池，大军都有，该去收割一波了" class="headerlink" title="4.神器，城池，大军都有，该去收割一波了"></a>4.神器，城池，大军都有，该去收割一波了</h2><p>虽然此时咱们只要默认的一篇 <code>Hello World</code>, 也不能阻止我们想做最靓的仔的决心，首先在根目录下 <code>_config.yml</code>找到 <code>deploy</code>字段，然后使用绝技 <code>copy</code> 大法</p><h4 id="注意点，-github-记得这是-SSH-key-免密登陆-就不用手动了，不会的同学下课记得补习。"><a href="#注意点，-github-记得这是-SSH-key-免密登陆-就不用手动了，不会的同学下课记得补习。" class="headerlink" title="注意点， github 记得这是 SSH key 免密登陆 就不用手动了，不会的同学下课记得补习。"></a>注意点， github 记得这是 SSH key 免密登陆 就不用手动了，不会的同学下课记得补习。</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">deploy:</span><br><span class="line">  type: git</span><br><span class="line">  repo: &lt;你的仓库地址&gt; # https:&#x2F;&#x2F;github.com&#x2F;14138993&#x2F;14138993.github.io</span><br><span class="line">  branch: master</span><br></pre></td></tr></table></figure><p>施展完毕，不过我们需要喝瓶 脉动 补充下体力进行最后的操作</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; 下载自动提交的 npm 包</span><br><span class="line">npm install hexo-deployer-git --save</span><br></pre></td></tr></table></figure><p>是时候向世界证明我们的存在了，下面开始公布</p><p>ps: 不想手动敲这么多命令，下方有配置教你怎么偷懒哟</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">hexo clean &#x2F;&#x2F; 清除 pubkic</span><br><span class="line"></span><br><span class="line">hexo g &#x2F;&#x2F; 编译</span><br><span class="line"></span><br><span class="line">hexo d &#x2F;&#x2F; 提交</span><br></pre></td></tr></table></figure><h2 id="5-收获成果"><a href="#5-收获成果" class="headerlink" title="5. 收获成果"></a>5. 收获成果</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">访问 https:&#x2F;&#x2F;&lt;user-name&gt;.github.io&#x2F; 查看效果。</span><br></pre></td></tr></table></figure><h3 id="课外知识点"><a href="#课外知识点" class="headerlink" title="课外知识点"></a>课外知识点</h3><ol><li>如何创建新页面，新文章？</li></ol><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hexo new post xxx(文件名) &#x2F;&#x2F; 创建新文章</span><br><span class="line"></span><br><span class="line">hexo new page xxx(文件名) &#x2F;&#x2F; 创建新页面</span><br></pre></td></tr></table></figure><p>这里提一下 关于tags link categories 这三个页面 需要在对应md文件里增type 这个属性 值就是本身名字 例如 </p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">title: link</span><br><span class="line">type: link</span><br></pre></td></tr></table></figure><ol start="2"><li>更换主题皮肤</li></ol><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; 下载主题到themes文件夹下</span><br><span class="line">git clone https:&#x2F;&#x2F;github.com&#x2F;butterfly&#x2F;hexo-theme-butterfly xxx&#x2F;themes</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 修改 根目录_config.yml 配置</span><br><span class="line">theme: 你的主题名称</span><br></pre></td></tr></table></figure><ol start="3"><li>中文乱码</li></ol><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; 修改 根目录_config.yml 配置</span><br><span class="line">language: zh-CN &#x2F;&#x2F; 改为中文</span><br></pre></td></tr></table></figure><ol start="4"><li>部署优化</li></ol><p>国际惯例，能偷懒的绝不多写一个字母😂, 修改咱们的<code>package.json</code> 在 <code>script</code> 里增加命令</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&quot;dev&quot;: &quot;hexo s&quot;, &#x2F;&#x2F; 本地启动</span><br><span class="line">&quot;build&quot;: &quot;hexo clean &amp;&amp; hexo g &amp;&amp; hexo deploy&quot; &#x2F;&#x2F; 一键部署到github</span><br></pre></td></tr></table></figure><p>到此搭建博客已经完成，但是你可能觉得美中不足</p><h2 id="优化点"><a href="#优化点" class="headerlink" title="优化点"></a>优化点</h2><h3 id="个人域名解析到github域名"><a href="#个人域名解析到github域名" class="headerlink" title="个人域名解析到github域名"></a>个人域名解析到github域名</h3><ol><li>上传到github后在根目录创建 <code>CNAME</code> 里面为自己的域名地址</li><li>在域名服务商将域名解析 不会的请百度，这里就不细说了</li></ol><h3 id="主题优化，评论功能等"><a href="#主题优化，评论功能等" class="headerlink" title="主题优化，评论功能等"></a>主题优化，评论功能等</h3><ol><li>直接去hexo 官网挑选喜欢的主题，一般主题都有详细的配置教程，跟着教程做</li><li>我的博客使用的是 <code>butterfly</code> 如果你觉得喜欢，或者觉得功能满足你，不想自己琢磨，可以直接<a href="https://github.com/14138993/book-config.git" target="_blank" rel="noopener">Fork</a> 一键使用</li><li>评论系统 我使用的是 <a href="https://valine.js.org/quickstart.html" target="_blank" rel="noopener">valine</a>, 如果你是fork我的 需要在 <code>source &gt; _data &gt; butterfly.yml</code> 里 <code>valine</code> 配置你的 <code>appID</code> 和 <code>appKey</code></li></ol><p>谢谢，到此结束</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h1 id=&quot;hexo-github-快速搭建博客&quot;&gt;&lt;a href=&quot;#hexo-github-快速搭建博客&quot; class=&quot;headerlink&quot; title=&quot;hexo + github 快速搭建博客&quot;&gt;&lt;/a&gt;hexo + github 快速搭建博客&lt;/h1&gt;&lt;p&gt;话不
+      
+    
+    </summary>
+    
+    
+      <category term="hexo" scheme="https://huangguolong1314.github.io/categories/hexo/"/>
+    
+    
+      <category term="博客" scheme="https://huangguolong1314.github.io/tags/%E5%8D%9A%E5%AE%A2/"/>
+    
+  </entry>
+  
+</feed>
