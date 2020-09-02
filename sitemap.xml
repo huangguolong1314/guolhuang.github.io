@@ -2,9 +2,16 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>https://huangguolong1314.github.io/2020/07/24/docker-compose%E6%90%AD%E5%BB%BAMySQL%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%E9%9B%86%E7%BE%A4/</loc>
+    <loc>https://huangguolong1314.github.io/2020/09/02/docker-compose%E6%90%AD%E5%BB%BAMySQL%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%E9%9B%86%E7%BE%A4/</loc>
     
-    <lastmod>2020-09-02T03:31:29.864Z</lastmod>
+    <lastmod>2020-09-02T03:39:26.733Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://huangguolong1314.github.io/2020/07/01/hexo+github%E5%BF%AB%E9%80%9F%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2/</loc>
+    
+    <lastmod>2020-09-02T03:35:07.949Z</lastmod>
     
   </url>
   
@@ -26,13 +33,6 @@
     <loc>https://huangguolong1314.github.io/2020/07/24/%E4%B8%80%E4%B8%AA%E6%95%85%E4%BA%8B%E8%AE%B2%E5%AE%8Chttps/</loc>
     
     <lastmod>2020-07-24T06:42:07.570Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://huangguolong1314.github.io/2020/07/01/hexo+github%E5%BF%AB%E9%80%9F%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2/</loc>
-    
-    <lastmod>2020-07-24T01:40:02.643Z</lastmod>
     
   </url>
   
