@@ -2,16 +2,23 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>https://huangguolong1314.github.io/2020/07/24/git%E8%AF%A6%E8%A7%A3/</loc>
+    <loc>https://huangguolong1314.github.io/2020/07/24/docker-compose%E6%90%AD%E5%BB%BAMySQL%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%E9%9B%86%E7%BE%A4/</loc>
     
-    <lastmod>2020-07-24T07:19:39.782Z</lastmod>
+    <lastmod>2020-09-02T03:31:29.864Z</lastmod>
     
   </url>
   
   <url>
     <loc>https://huangguolong1314.github.io/2020/07/24/%E8%A7%A3%E5%86%B3hexo%E5%8D%9A%E5%AE%A2%E6%96%87%E7%AB%A0%E5%A4%AA%E9%95%BF%E5%AF%BC%E8%87%B4%E7%9A%84%E6%98%BE%E7%A4%BA%E4%B8%8D%E5%85%A8%E9%97%AE%E9%A2%98/</loc>
     
-    <lastmod>2020-07-24T06:42:18.088Z</lastmod>
+    <lastmod>2020-08-24T08:20:53.557Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://huangguolong1314.github.io/2020/07/24/git%E8%AF%A6%E8%A7%A3/</loc>
+    
+    <lastmod>2020-07-24T07:19:39.782Z</lastmod>
     
   </url>
   
