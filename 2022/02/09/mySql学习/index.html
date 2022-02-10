@@ -1,0 +1,211 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>MySql学习 —— 子查询(where、from、exists) 及 连接查询(left join、right join、inner join、union join) | guolhuang</title><meta name="description" content="目录 子查询 1、where型子查询：把内层查询的结果作为外层查询的比较条件 2、from型子查询：把内层的查询结果当成临时表，供外层sql再次查询。查询结果集可以当成表看待。临时表要使用一个别名 3、exists型子查询：把外层sql的结果，拿到内层sql去测试，如果内层的sql成立，则该行取出。内层查询是exists后的查询 4、any，in子查询 5、子查询总结   连接查询 1、全相乘（不"><meta name="keywords" content="博客"><meta name="author" content="guolhuang"><meta name="copyright" content="guolhuang"><meta name="format-detection" content="telephone=no"><link rel="shortcut icon" href="/img/caihong.png"><link rel="canonical" href="https://huangguolong1314.github.io/2022/02/09/mySql%E5%AD%A6%E4%B9%A0/"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//fonts.googleapis.com" crossorigin="crossorigin"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><meta property="og:type" content="article"><meta property="og:title" content="MySql学习 —— 子查询(where、from、exists) 及 连接查询(left join、right join、inner join、union join)"><meta property="og:url" content="https://huangguolong1314.github.io/2022/02/09/mySql%E5%AD%A6%E4%B9%A0/"><meta property="og:site_name" content="guolhuang"><meta property="og:description" content="目录 子查询 1、where型子查询：把内层查询的结果作为外层查询的比较条件 2、from型子查询：把内层的查询结果当成临时表，供外层sql再次查询。查询结果集可以当成表看待。临时表要使用一个别名 3、exists型子查询：把外层sql的结果，拿到内层sql去测试，如果内层的sql成立，则该行取出。内层查询是exists后的查询 4、any，in子查询 5、子查询总结   连接查询 1、全相乘（不"><meta property="og:image" content="https://huangguolong1314.github.io/images/mysql/mysql-logo.png"><meta property="article:published_time" content="2022-02-09T07:30:00.000Z"><meta property="article:modified_time" content="2022-02-10T08:58:50.032Z"><meta name="twitter:card" content="summary"><script>var activateDarkMode = function () {
+  document.documentElement.setAttribute('data-theme', 'dark')
+  if (document.querySelector('meta[name="theme-color"]') !== null) {
+    document.querySelector('meta[name="theme-color"]').setAttribute('content', '#000')
+  }
+}
+var activateLightMode = function () {
+  document.documentElement.setAttribute('data-theme', 'light')
+  if (document.querySelector('meta[name="theme-color"]') !== null) {
+    document.querySelector('meta[name="theme-color"]').setAttribute('content', '#fff')
+  }
+}
+
+var getCookies = function (name) {
+  const value = `; ${document.cookie}`
+  const parts = value.split(`; ${name}=`)
+  if (parts.length === 2) return parts.pop().split(';').shift()
+}
+
+var autoChangeMode = 'false'
+var t = getCookies('theme')
+if (autoChangeMode === '1') {
+  var isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+  var isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+  var isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+  var hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+  if (t === undefined) {
+    if (isLightMode) activateLightMode()
+    else if (isDarkMode) activateDarkMode()
+    else if (isNotSpecified || hasNoSupport) {
+      console.log('You specified no preference for a color scheme or your browser does not support it. I Schedule dark mode during night time.')
+      var now = new Date()
+      var hour = now.getHours()
+      var isNight = hour <= 6 || hour >= 18
+      isNight ? activateDarkMode() : activateLightMode()
+    }
+    window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+      if (Cookies.get('theme') === undefined) {
+        e.matches ? activateDarkMode() : activateLightMode()
+      }
+    })
+  } else if (t === 'light') activateLightMode()
+  else activateDarkMode()
+} else if (autoChangeMode === '2') {
+  now = new Date()
+  hour = now.getHours()
+  isNight = hour <= 6 || hour >= 18
+  if (t === undefined) isNight ? activateDarkMode() : activateLightMode()
+  else if (t === 'light') activateLightMode()
+  else activateDarkMode()
+} else {
+  if (t === 'dark') activateDarkMode()
+  else if (t === 'light') activateLightMode()
+}</script><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css"><link rel="next" title="nginx详解" href="https://huangguolong1314.github.io/2021/06/21/%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0%E6%90%9E%E5%AE%9Anginx%E9%85%8D%E7%BD%AE/"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Titillium+Web&amp;display=swap"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"找不到您查询的内容:${query}"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  bookmark: {
+    message_prev: '按',
+    message_next: '键将本页加入书签'
+  },
+  runtime_unit: '天',
+  runtime: false,
+  copyright: {"languages":{"author":"作者: guolhuang","link":"链接: ","source":"来源: guolhuang","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  ClickShowText: undefined,
+  medium_zoom: false,
+  fancybox: true,
+  Snackbar: {"bookmark":{"message_prev":"按","message_next":"键将本页加入书签"},"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#121212","position":"bottom-left"},
+  justifiedGallery: {
+    js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+    css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+  },
+  baiduPush: false,
+  highlightCopy: true,
+  highlightLang: true,
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isanchor: false    
+}</script><script>var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isSidebar: true
+  }</script><noscript><style>
+#nav {
+  opacity: 1
+}
+.justified-gallery img{
+  opacity: 1
+}
+</style></noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/sviptzk/HexoStaticFile@latest/Hexo/css/custom.min.css"><meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="guolhuang" type="application/atom+xml">
+</head><body><canvas class="fireworks"></canvas><div id="mobile-sidebar"><div id="menu_mask"></div><div id="mobile-sidebar-menus"><div class="mobile_author_icon"><img class="avatar-img" src="/img/avatar.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="mobile_post_data"><div class="mobile_data_item is-center"><div class="mobile_data_link"><a href="/archives/"><div class="headline">文章</div><div class="length_num">7</div></a></div></div><div class="mobile_data_item is-center">      <div class="mobile_data_link"><a href="/tags/"><div class="headline">标签</div><div class="length_num">4</div></a></div></div><div class="mobile_data_item is-center">     <div class="mobile_data_link"><a href="/categories/"><div class="headline">分类</div><div class="length_num">4</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 链接</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div><div class="menus_item"><a class="site-page" href="/leave/"><i class="fa-fw fas fa-comment-dots"></i><span> 留言板</span></a></div></div></div></div><i class="fas fa-arrow-right on" id="toggle-sidebar"></i><div id="sidebar"><div class="sidebar-toc"><div class="sidebar-toc__title">目录</div><div class="sidebar-toc__progress"><span class="progress-notice">你已经读了</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar">     </div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#目录"><span class="toc-number">1.</span> <span class="toc-text">目录</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#子查询"><span class="toc-number">2.</span> <span class="toc-text">子查询</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1、where型子查询：把内层查询的结果作为外层查询的比较条件"><span class="toc-number">2.0.1.</span> <span class="toc-text">1、where型子查询：把内层查询的结果作为外层查询的比较条件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2、from型子查询：把内层的查询结果当成临时表，供外层sql再次查询。查询结果集可以当成表看待。临时表要使用一个别名。"><span class="toc-number">2.0.2.</span> <span class="toc-text">2、from型子查询：把内层的查询结果当成临时表，供外层sql再次查询。查询结果集可以当成表看待。临时表要使用一个别名。</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3、exists型子查询：把外层sql的结果，拿到内层sql去测试，如果内层的sql成立，则该行取出。内层查询是exists后的查询。"><span class="toc-number">2.0.3.</span> <span class="toc-text">3、exists型子查询：把外层sql的结果，拿到内层sql去测试，如果内层的sql成立，则该行取出。内层查询是exists后的查询。</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4、-any，in-子查询"><span class="toc-number">2.0.4.</span> <span class="toc-text">4、 any，in 子查询</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5、子查询总结"><span class="toc-number">2.0.5.</span> <span class="toc-text">5、子查询总结</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#连接查询"><span class="toc-number">3.</span> <span class="toc-text">连接查询</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1、全相乘（不是全连接、连接查询），全相乘是作笛卡尔积"><span class="toc-number">3.0.1.</span> <span class="toc-text">1、全相乘（不是全连接、连接查询），全相乘是作笛卡尔积</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2、左连接查询-left-join-on"><span class="toc-number">3.0.2.</span> <span class="toc-text">2、左连接查询 left join ... on ...</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3、右连接查询-right-join-on"><span class="toc-number">3.0.3.</span> <span class="toc-text">3、右连接查询 right join ... on ...</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4、内连接-inner-join-on"><span class="toc-number">3.0.4.</span> <span class="toc-text">4、内连接 inner join ... on ...</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5、全连接-full-join-on"><span class="toc-number">3.0.5.</span> <span class="toc-text">5、全连接 full join ... on ...</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6、联合查询-union"><span class="toc-number">3.0.6.</span> <span class="toc-text">6、联合查询 union</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7、连接查询总结"><span class="toc-number">3.0.7.</span> <span class="toc-text">7、连接查询总结</span></a></li></ol></li></ol></li></ol></div></div></div><div id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/images/mysql/mysql-logo.png)"><nav id="nav"><span class="pull-left" id="blog_name"><a class="blog_title" id="site-name" href="/">guolhuang</a></span><span class="pull-right menus"><div id="search_button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 链接</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div><div class="menus_item"><a class="site-page" href="/leave/"><i class="fa-fw fas fa-comment-dots"></i><span> 留言板</span></a></div></div><span class="toggle-menu close"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></span></span></nav><div id="post-info"><div id="post-title"><div class="posttitle">MySql学习 —— 子查询(where、from、exists) 及 连接查询(left join、right join、inner join、union join)</div></div><div id="post-meta"><div class="meta-firstline"><time class="post-meta__date"><span class="post-meta__date-created" title="发表于 2022-02-09 15:30:00"><i class="far fa-calendar-alt fa-fw"></i> 发表于 2022-02-09</span><span class="post-meta__separator">|</span><span class="post-meta__date-updated" title="更新于 2022-02-10 16:58:50"><i class="fas fa-history fa-fw"></i> 更新于 2022-02-10</span></time><span class="post-meta__categories"><span class="post-meta__separator">|</span><i class="fas fa-inbox fa-fw post-meta__icon"></i><a class="post-meta__categories" href="/categories/hexo/">hexo</a></span></div><div class="meta-secondline"> </div><div class="meta-thirdline"><span class="post-meta-pv-cv"><i class="far fa-eye fa-fw post-meta__icon"></i><span>阅读量:</span><span id="busuanzi_value_page_pv"></span></span><span class="post-meta-commentcount"></span></div></div></div></header><main class="layout_post" id="content-inner"><article id="post"><div class="post-content" id="article-container"><h1 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h1><ul>
+<li>子查询<ul>
+<li>1、where型子查询：把内层查询的结果作为外层查询的比较条件</li>
+<li>2、from型子查询：把内层的查询结果当成临时表，供外层sql再次查询。查询结果集可以当成表看待。临时表要使用一个别名</li>
+<li>3、exists型子查询：把外层sql的结果，拿到内层sql去测试，如果内层的sql成立，则该行取出。内层查询是exists后的查询</li>
+<li>4、any，in子查询</li>
+<li>5、子查询总结</li>
+</ul>
+</li>
+<li>连接查询<ul>
+<li>1、全相乘（不是全连接、连接查询），全相乘是做笛卡尔积</li>
+<li>2、左连接查询 left join … on …</li>
+<li>3、右连接查询 right join … on …</li>
+<li>4、内连接 inner join … on …</li>
+<li>5、全连接 full join … on …</li>
+<li>6、联合查询 union</li>
+<li>7、连接查询总结</li>
+</ul>
+</li>
+</ul>
+<hr>
+<p><code>注：该mysql系列博客仅为个人学习笔记。</code></p>
+<p>使用goods表来练习子查询，表结构如下：<br><img src= "/img/loading.gifs" data-src="/images/mysql/mysql_learn/1.png" alt=""></p>
+<p>所有数据(cat_id与category.cat_id关联)：<br><img src= "/img/loading.gifs" data-src="/images/mysql/mysql_learn/2.png" alt=""></p>
+<p>类别表：<br><img src= "/img/loading.gifs" data-src="/images/mysql/mysql_learn/3.png" alt=""></p>
+<p>mingoods(连接查询时作测试)：<br><img src= "/img/loading.gifs" data-src="/images/mysql/mysql_learn/4.png" alt=""></p>
+<hr>
+<h1 id="子查询"><a href="#子查询" class="headerlink" title="子查询"></a>子查询</h1><h3 id="1、where型子查询：把内层查询的结果作为外层查询的比较条件"><a href="#1、where型子查询：把内层查询的结果作为外层查询的比较条件" class="headerlink" title="1、where型子查询：把内层查询的结果作为外层查询的比较条件"></a>1、<code>where型子查询：把内层查询的结果作为外层查询的比较条件</code></h3><p>1.1 查询id最大的一件商品（使用排序+分页实现）<br>    mysql&gt; SELECT goods_id,goods_name,shop_price FROM goods ORDER BY goods_id DESC LIMIT 1;<br><img src= "/img/loading.gifs" data-src="/images/mysql/mysql_learn/5.png" alt=""></p>
+<p>1.2 查询id最大的一件商品（使用where子查询实现）<br>    mysql&gt; SELECT goods_id,goods_name,shop_price FROM goods WHERE goods_id = (SELECT MAX(goods_id) FROM goods);<br><img src= "/img/loading.gifs" data-src="/images/mysql/mysql_learn/6.png" alt=""></p>
+<p>1.3 查询每个类别下id最大的商品（使用where子查询实现）<br>    mysql&gt; SELECT goods_id,goods_name,cat_id,shop_price FROM goods WHERE goods_id IN (SELECT MAX(goods_id) FROM goods GROUP BY cat_id);<br><img src= "/img/loading.gifs" data-src="/images/mysql/mysql_learn/7.png" alt=""></p>
+<h3 id="2、from型子查询：把内层的查询结果当成临时表，供外层sql再次查询。查询结果集可以当成表看待。临时表要使用一个别名。"><a href="#2、from型子查询：把内层的查询结果当成临时表，供外层sql再次查询。查询结果集可以当成表看待。临时表要使用一个别名。" class="headerlink" title="2、from型子查询：把内层的查询结果当成临时表，供外层sql再次查询。查询结果集可以当成表看待。临时表要使用一个别名。"></a>2、<code>from型子查询：把内层的查询结果当成临时表，供外层sql再次查询。查询结果集可以当成表看待。临时表要使用一个别名。</code></h3><p>2.1 查询每个类别下id最大的商品（使用from型子查询）<br>    mysql&gt; SELECT goods_id,goods_name,cat_id,shop_price FROM (SELECT goods_id,goods_name,cat_id,shop_price FROM goods ORDER BY cat_id ASC,goods_id DESC) AS tmp GROUP BY cat_id;<br>    子查询查出的结果集看第二张图，可以看到每个类别的第一条商品的id都为该类别下的最大值。然后将这个结果集作为一张临时表，巧妙的使用group by 查询出每个类别下的第一条记录，即为每个类别下商品id最大。<br><img src= "/img/loading.gifs" data-src="/images/mysql/mysql_learn/8.png" alt=""><br><img src= "/img/loading.gifs" data-src="/images/mysql/mysql_learn/9.png" alt=""></p>
+<h3 id="3、exists型子查询：把外层sql的结果，拿到内层sql去测试，如果内层的sql成立，则该行取出。内层查询是exists后的查询。"><a href="#3、exists型子查询：把外层sql的结果，拿到内层sql去测试，如果内层的sql成立，则该行取出。内层查询是exists后的查询。" class="headerlink" title="3、exists型子查询：把外层sql的结果，拿到内层sql去测试，如果内层的sql成立，则该行取出。内层查询是exists后的查询。"></a>3、<code>exists型子查询：把外层sql的结果，拿到内层sql去测试，如果内层的sql成立，则该行取出。内层查询是exists后的查询。</code></h3><p>3.1 从类别表中取出其类别下有商品的类别（如果改类别下没有商品，则不取出），（使用where子查询）<br>    mysql&gt; SELECT c.cat_id,c.cat_name FROM category c WHERE c.cat_id IN (SELECT g.cat_id FROM goods g GROUP BY g.cat_id);<br><img src= "/img/loading.gifs" data-src="/images/mysql/mysql_learn/10.png" alt=""></p>
+<p>3.2 从类别表中取出其类别下有商品的类别（如果该类别下没有商品，则不取出），（使用exists子查询）<br>    mysql&gt; SELECT c.cat_id,c.cat_name FROM category c WHERE EXISTS (SELECT 1 FROM goods g WHERE g.cat_id = c.cat_id);<br>    exists子查询，如果exists后的内层查询能查询出数据，则表示存在；为空则不存在。<br><img src= "/img/loading.gifs" data-src="/images/mysql/mysql_learn/11.png" alt=""></p>
+<h3 id="4、-any，in-子查询"><a href="#4、-any，in-子查询" class="headerlink" title="4、 any，in 子查询"></a>4、 <code>any，in 子查询</code></h3><p><code>用一张数字表作为子查询</code><br><img src= "/img/loading.gifs" data-src="/images/mysql/mysql_learn/12.png" alt=""></p>
+<p>4.1 使用 any 查出类别大于任何一个num值的类别。<br>    ANY关键词必须后面接一个比较操作符。ANY关键词的意思是“对于在子查询返回的列中的任一数值，如果比较结果为TRUE的话，则返回TRUE”。<br>    mysql&gt; SELECT cat_id,cat_name FROM category WHERE cat_id &gt; ANY (SELECT num FROM nums);<br><img src= "/img/loading.gifs" data-src="/images/mysql/mysql_learn/13.png" alt=""></p>
+<p>4.2 使用 in 查出cat_id 等于 num 的类别<br>    mysql&gt; SELECT cat_id,cat_name FROM category WHERE cat_id IN (SELECT num FROM nums);<br><img src= "/img/loading.gifs" data-src="/images/mysql/mysql_learn/14.png" alt=""></p>
+<p>4.3 in 的效果跟 =any 的效果是一样的<br><img src= "/img/loading.gifs" data-src="/images/mysql/mysql_learn/15.png" alt=""></p>
+<p>4.4 使用 all 查询<br>    词语ALL必须接在一个比较操作符的后面。ALL的意思是“对于子查询返回的列中的所有值，如果比较结果为TRUE，则返回TRUE。”<br>    mysql&gt; SELECT cat_id,cat_name FROM category WHERE cat_id &gt; ALL (SELECT num FROM nums);<br><img src= "/img/loading.gifs" data-src="/images/mysql/mysql_learn/16.png" alt=""></p>
+<p>4.5 not in 和 &lt;&gt; any 的效果是一样的<br>    NOT IN 不是 &lt;&gt; ANY 的别名，但是是<code>&lt;&gt; ALL的别名</code><br>    mysql&gt; SELECT cat_id,cat_name FROM category WHERE cat_id NOT IN (SELECT num FROM nums);<br><img src= "/img/loading.gifs" data-src="/images/mysql/mysql_learn/17.png" alt=""></p>
+<h3 id="5、子查询总结"><a href="#5、子查询总结" class="headerlink" title="5、子查询总结"></a>5、<code>子查询总结</code></h3><p>5.1 where型子查询：把内层查询的结果作为外层查询的比较条件。<br>5.2 from型子查询：把内层的查询结果当成临时表，供外层sql再次查询。查询结果集可以当成表看待，<code>临时表需要一个别名</code>。<br>5.3  exists型子查询：把外层sql的结果，拿到内层sql去测试，如果内层的sql成立，则该行取出。内层sql是exists后的查询。<br>5.4 子查询也可以嵌套在其它子查询中，嵌套程度可以很深。<code>子查询必须要位于圆括号中</code>。<br>5.5 <code>子查询的主要优势</code>为:<br>    5.5.1 子查询允许结构化的查询，这样就可以把一个语句的每个部分隔离开。<br>    5.5.2 有些操作需要复杂的联合和关联。子查询提供了其它的方法来执行这些操作。<br>5.6 <code>ANY关键词必须后面接一个比较操作符</code>。ANY关键词的意思是“对于在子查询返回的列中的<code>任一数值</code>，如果比较结果为TRUE的话，则返回TRUE”。 词语 IN 是 ＝ANY 的别名，二者效果相同。NOT IN不是  &lt;&gt; ANY  的别名，但是是  &lt;&gt; ALL  的别名。<br>5.7 词语ALL必须接在一个比较操作符的后面。ALL的意思是“对于子查询返回的列中的<code>所有值</code>，如果比较结果为TRUE，则返回TRUE。”<br>5.8 <code>优化子查询</code>有些子句会影响在子查询中的行的数量和顺序，通过加一些限制条件来限制子查询查出来的条数。例如：<br>    5.8.1 SELECT * FROM t1 WHERE t1.column1 IN (SELECT column1 FROM t2 ORDER BY column1);<br>    5.8.2 SELECT * FROM t1 WHERE t1.column1 IN (SELECT DISTINCT column1 FROM t2);<br>    5.8.3 SELECT * FROM t1 WHERE EXISTS (SELECT * FROM t2 LIMIT 1);<br>    5.8.4 用子查询替换联合，例如：<br>        5.8.4.1 SELECT DISTINCT column1 FROM t1 WHERE t1.column1 IN (SELECT column1 FROM t2);<br>            <code>代替这个：</code> SELECT DISTINCT t1.column1 FROM t1, t2 WHERE t1.column1 = t2.column1;</p>
+<h1 id="连接查询"><a href="#连接查询" class="headerlink" title="连接查询"></a>连接查询</h1><p>学习链接查询，先了解“笛卡尔积”，看下百度给出的解释：<br><img src= "/img/loading.gifs" data-src="/images/mysql/mysql_learn/18.png" alt=""><br><code>在数据库中，一张表就是一个集合，每一行就是集合中的一个元素</code>。表之间作联合查询既是作笛卡尔乘积，比如A表有5条数据，B表有8条数据，如果不做条件筛选，那么两表查询就有<code>5 x 8 = 40</code> 条数据。</p>
+<p>先看下用到的测试表基本信息：我们要实现的功能就是查询商品的时候，从类别表将商品类别名称关联查询出来。<br>    行数：类别表14条，商品表4条<br><img src= "/img/loading.gifs" data-src="/images/mysql/mysql_learn/19.png" alt=""></p>
+<pre><code>结构：商品表和类别表都有一个cat_id</code></pre><p><img src= "/img/loading.gifs" data-src="/images/mysql/mysql_learn/20.png" alt=""></p>
+<pre><code>小类别表（左右连接时做对比）</code></pre><p><img src= "/img/loading.gifs" data-src="/images/mysql/mysql_learn/21.png" alt=""></p>
+<h3 id="1、全相乘（不是全连接、连接查询），全相乘是作笛卡尔积"><a href="#1、全相乘（不是全连接、连接查询），全相乘是作笛卡尔积" class="headerlink" title="1、全相乘（不是全连接、连接查询），全相乘是作笛卡尔积"></a>1、<code>全相乘</code>（不是全连接、连接查询），全相乘是作笛卡尔积</h3><p>两表全相乘，就是直接从两张表里查询；从查询的截图看出，总共查出了 <code>4 x 14 = 56</code> 条记录，这些记录是笛卡尔乘积的结果，既是两两组合；<br>但是我们要的是每个商品的信息显示类别名称而已，这里却查出了56条记录，其中52条记录都是无限的数据，<code>全相乘的查询效率低</code>。<br>    mysql&gt; SELECT g,goods_name,g.cat_id, c.cat_id,c.cat_name FROM mingoods g, category c;<br><img src= "/img/loading.gifs" data-src="/images/mysql/mysql_learn/22.png" alt=""><br>    如果在两张表里有相同字段，做联合查询的时候，要区别表明，否则会报错（模糊不清）<br>    mysql&gt; SELECT goods_name,cat_id,cat_name FROM <code>mingoods,category</code>;<br><img src= "/img/loading.gifs" data-src="/images/mysql/mysql_learn/23.png" alt=""><br>    添加条件，使两表关联查询，这样查出来就是商品和类别一一对应了。虽然这里查询来4条记录，但是<code>全相乘效率低，全相乘会在内存中生成一个非常大的数据（临时表），因为有很多不必要的数据</code>。<br>    <code>如果一张表有10000条数据，另一张表有10000条数据，两表全相乘就是100W条数据，是非常消耗内存的</code>。而且，全相乘不能好好的利用索引，因为全相乘生成一张临时表，临时表是没有索引的，大大降低了查询效率。<br>    mysql&gt; SELECT g.goods_name,g.cat_id AS g_cat_id, c.cat_id AS c_cat_id, c.cat_name FROM mingoods g, category c WHERE g.cat_id = c.cat_id;<br><img src= "/img/loading.gifs" data-src="/images/mysql/mysql_learn/24.png" alt=""></p>
+<h3 id="2、左连接查询-left-join-on"><a href="#2、左连接查询-left-join-on" class="headerlink" title="2、左连接查询 left join ... on ..."></a>2、<code>左连接查询 left join ... on ...</code></h3><p>语法：select A.filed, [A.filed2, …. ,] B.filed, [B.filed4…,] from <left table> as A  <code>left join</code> <right table> as B <code>on</code> <expression><br>假设有A、B两张表，左连接查询即 A表在左不动，B表在右滑动，A表与B表通过一个关系来关联行，B表去匹配A表。</p>
+<p>2.1 先来看看on后的条件恒为真的情况<br>    mysql&gt; SELECT g.goods_name,g.cat_id, c.cat_id ,c.cat_name FROM mingoods g LEFT JOIN category c ON 1;<br>    跟全相乘相比，从截图可以看出，总记录数仍然不变，还是 <code>4 x 14 = 56</code> 条记录。但是这次是商品表不动，类别表去匹配，因为每次都为真，所以将所有的记录都查出来了。<code>左连接，其实就可以看成左表是主表，右表是从表</code>。<br><img src= "/img/loading.gifs" data-src="/images/mysql/mysql_learn/25.png" alt=""></p>
+<p>2.2 根据cat_id使两表关联行<br>    mysql&gt; SELECT g.goods_name,g.cat_id,c.cat_id,c.cat_name <code>FROM mingoods g LEFT JOIN category c ON g.cat_id = c.cat_id</code>;<br>    使用左连接查询达到了同样的效果，但是不会有其他冗余数据，<code>查询速度快，消耗内存小，而且使用了索引。左连接查询效率相比于全相乘的效率快了10+倍以上</code>。<br>    左连接时，mingoods表（左表）不动，category表（右表）根据条件去一条条匹配，虽说category表也是读取一行行记录，然后判断cat_id是否跟mingoods表的相同，但是，左连接使用了索引，cat_id建立了索引的话，查询速度非常快，所以整体效率相比于全相乘要快得多，全相乘没有使用索引。<br><img src= "/img/loading.gifs" data-src="/images/mysql/mysql_learn/26.png" alt=""></p>
+<p>2.3 查询出第四个类别下的商品，要求显示商品名称<br>    mysql&gt; SELECT g.goods_name,g.cat_id,c.cat_name,g.shop_price FROM goods g LEFT JOIN category c ON g.cat_id = c.cat_id WHERE g.cat_id = 4;<br><img src= "/img/loading.gifs" data-src="/images/mysql/mysql_learn/27.png" alt=""></p>
+<p>2.4 对于左连接查询，如果右表中没有满足条件的行，则默认填充NULL<br>    mysql&gt; SELECT g.goods_name,g.cat_id AS g_cat_id, c.cat_id AS c_cat_id,c.cat_id FROM mingoods g LEFT JOIN mincategory c ON g.cat_id = c.cat_id;<br><img src= "/img/loading.gifs" data-src="/images/mysql/mysql_learn/28.png" alt=""></p>
+<h3 id="3、右连接查询-right-join-on"><a href="#3、右连接查询-right-join-on" class="headerlink" title="3、右连接查询 right join ... on ..."></a>3、<code>右连接查询 right join ... on ...</code></h3><p>语法：select A.field1,A.field2,…, B.field3,B.field4  from <left table> A <code>right join</code> <right table> B <code>on</code> <expression><br>右连接查询跟左连接查询类似，只是右连接是以右表为主表，会将右表所有数据查询出来，而左表则根据条件去匹配，如果左表没有满足条件的行，则左边默认显示NULL。左右连接是可以互换的。<br>    mysql&gt; SELECT g.goods_name,g.cat_id AS g_cat_id,  c.cat_id AS c_cat_id,c.cat_name FROM mingoods g RIGHT JOIN mincategory c ON g.cat_id = c.cat_id;<br><img src= "/img/loading.gifs" data-src="/images/mysql/mysql_learn/29.png" alt=""></p>
+<h3 id="4、内连接-inner-join-on"><a href="#4、内连接-inner-join-on" class="headerlink" title="4、内连接 inner join ... on ..."></a>4、<code>内连接 inner join ... on ...</code></h3><p>语法：select A.field1,A.field2,.., B.field3, B.field4 from <left table> A <code>inner join</code> <right table> B <code>on</code> <expression><br>内连接查询，就是取左连接和右连接的交集，如果两边不能匹配条件，则都不取出。<br>    mysql&gt; SELECT g.goods_name,g.cat_id, c.* from mingoods g INNER JOIN mincategory c ON g.cat_id = c.cat_id;<br><img src= "/img/loading.gifs" data-src="/images/mysql/mysql_learn/30.png" alt=""></p>
+<h3 id="5、全连接-full-join-on"><a href="#5、全连接-full-join-on" class="headerlink" title="5、全连接 full join ... on ..."></a>5、<code>全连接 full join ... on ...</code></h3><p>语法：select … from <left table> <code>full join</code> <right table> <code>on</code> <expression><br>全连接会将两个表的所有数据查询出来，不满足条件的为NULL。<br>全连接查询跟全相乘查询的区别在于，如果某个项不匹配，全相乘不会查出来，全连接会查出来，而连接的另一边则为NULL。</p>
+<h3 id="6、联合查询-union"><a href="#6、联合查询-union" class="headerlink" title="6、联合查询 union"></a>6、<code>联合查询 union</code></h3><p>语法：select A.field1 as f1, A.field2 as f2 from <table1> A <code>union</code> (select B.field3 as f1, field4 as f2 from <table2> B)<br>union是求两个查询的并集。union合并的是结果集，不区分来自于哪一张表，所以可以合并多张表查询出来的数据。<br><img src= "/img/loading.gifs" data-src="/images/mysql/mysql_learn/31.png" alt=""></p>
+<p>6.1 将两张表的数据合并查询出来<br>    mysql&gt; SELECT id, content, user FROM comment UNION (SELECT id, msg AS content, user FROM feedback);<br><img src= "/img/loading.gifs" data-src="/images/mysql/mysql_learn/32.png" alt=""></p>
+<p>6.2 union查询，列名不一致时，以第一条sql语句的列名对齐<br>    mysql&gt; SELECT id, content, user FROM comment UNION (SELECT id, msg, user FROM feedback);<br><img src= "/img/loading.gifs" data-src="/images/mysql/mysql_learn/33.png" alt=""></p>
+<p>6.3 使用union查询会将重复的行过滤掉<br>    mysql&gt; SELECT content,user FROM comment UNION (SELECT msg, user FROM feedback);<br><img src= "/img/loading.gifs" data-src="/images/mysql/mysql_learn/34.png" alt=""></p>
+<p>6.4 使用union all查询所有，重复的行不会被过滤<br>    mysql&gt; SELECT content,user FROM comment UNION ALL (SELECT msg, user FROM feedback);<br><img src= "/img/loading.gifs" data-src="/images/mysql/mysql_learn/35.png" alt=""></p>
+<p>6.5 union查询，如果列数不相等，会报列数不相等错误<br>    mysql&gt; SELECT content,user FROM comment UNION (SELECT msg, user FROM feedback);<br><img src= "/img/loading.gifs" data-src="/images/mysql/mysql_learn/36.png" alt=""></p>
+<p>6.6 union 后的结果集还可以再做筛选<br>    mysql&gt; SELECT id,content,user FROM comment UNION ALL (SELECT id, msg, user FROM feedback) ORDER BY id DESC;<br><img src= "/img/loading.gifs" data-src="/images/mysql/mysql_learn/37.png" alt=""></p>
+<p><code>union查询时，order by放在内层sql中是不起作用的；因为union查出来的结果集再排序，内层的排序就没有意义了；因此，内层的order by排序，在执行期间，被mysql的代码分析器给优化掉了。</code><br>    mysql&gt; (SELECT id,content,user FROM comment ORDER BY id DESC) UNION ALL (SELECT id, msg, user FROM feedback ORDER BY id DESC);<br><img src= "/img/loading.gifs" data-src="/images/mysql/mysql_learn/38.png" alt=""></p>
+<p><code>order by 如果和limit一起使用，就显得有意义了，就不会被优化掉</code><br>    mysql&gt; ( SELECT goods_name,cat_id,shop_price FROM goods WHERE cat_id = 3 ORDER BY shop_price DESC LIMIT 3 ) UNION ( SELECT goods_name,cat_id,shop_price FROM goods WHERE cat_id = 4 ORDER BY shop_price DESC LIMIT 2 );<br><img src= "/img/loading.gifs" data-src="/images/mysql/mysql_learn/39.png" alt=""></p>
+<p>6.7 练习<br>    mysql&gt; SELECT name, SUM(money) FROM ( ( SELECT * FROM A ) UNION ALL ( SELECT * FROM B ) ) tmp GROUP BY name;<br><img src= "/img/loading.gifs" data-src="/images/mysql/mysql_learn/40.png" alt=""><br><img src= "/img/loading.gifs" data-src="/images/mysql/mysql_learn/41.png" alt=""></p>
+<h3 id="7、连接查询总结"><a href="#7、连接查询总结" class="headerlink" title="7、连接查询总结"></a>7、连接查询总结</h3><ol>
+<li><p><code>在数据库中，一张表就是一个集合，每一行就是集合中的一个元素</code>。连接查询即是作笛卡尔积，比如A表有1W条数据，B表有1W条数据，那么两表查询就有 1W X 1W = 100W 条数据</p>
+</li>
+<li><p><code>如果在两张表里有相同字段，做联合查询的时候，要区别表名</code>，否则会报错误(ambiguous 模糊不清)</p>
+</li>
+<li><p><code>全相乘效率低，全相乘会在内存中生成一个非常大的数据(临时表)，因为有很多不必要的数据</code>。如果一张表有10000条数据，另一张表有10000条数据，两表全相乘就是100W条数据，是非常消耗内存的。而且，<code>全相乘不能好好的利用索引，因为全相乘生成一张临时表，临时表里是没有索引的，大大降低了查询效率</code>。</p>
+</li>
+<li><p>左连接查询时，以左表为主表，会将左表所有数据查询出来；左表不动，右表根据条件去一条条匹配，如果没有满足条件的记录，则右边返回NULL。右连接查询时，以右表为主表，会将右表所有数据查询出来，右表不动，左表则根据条件去匹配，如果左表没有满足条件的行，则左边返回NULL。左右连接是可以互换的：A left join B  ==  B right join A (都是以A为主表) 。<code>左右连接既然可以互换，出于移植兼容性方面的考虑，尽量使用左连接</code>。</p>
+</li>
+<li><p>连接查询时，虽说也是读取一行行记录，然后判断是否满足条件，但是，<code>连接查询使用了索引，条件列建立了索引的话，查询速度非常快，所以整体效率相比于全相乘要快得多，全相乘是没有使用索引的</code>。使用连接查询，查询速度快，消耗内存小，而且使用了索引。连接查询效率相比于全相乘的查询效率快了10+倍以上。</p>
+</li>
+<li><p>内连接查询，就是取左连接和右连接的<code>交集</code>，如果两边不能匹配条件，则都不取出。</p>
+</li>
+<li><p>MySql可以用union(联合查询)来查出左连接和右连接的<code>并集</code>。<br><code>union查询会过滤重复的行，union all 不会过滤重复的行</code>。<code>union查询时，union之间的sql列数必须相等，列名以第一条sql的列为准</code>；列类型可以不一样，但没太大意义。<code>union查询时，order by放在内层sql中是不起作用的；因为union查出来的结果集再排序，内层的排序就没有意义了；因此，内层的order by排序，在执行期间，被mysql的代码分析器给优化掉了</code>。但是，<code>order by 如果和limit一起使用</code>，就显得有意义了，会影响最终结果集，就不会被优化掉。order by会根据最终是否会影响结果集而选择性的优化。</p>
+</li>
+<li><p>LEFT JOIN 是 LEFT OUTER JOIN 的缩写，同理，RIGHT JOIN 是 RIGHT OUTER JOIN 的缩写；JOIN 是 INNER JOIN 的缩写。</p>
+</li>
+</ol>
+</div><div><div style="text-align:center;color: #ccc;font-size:14px;font-family: cursive;">-------------&#x7EB8;&#x77ED;&#x60C5;&#x957F; <i class="fa fa-umbrella"></i> &#x4E0B;&#x6B21;&#x518D;&#x89C1;-------------</div></div><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">guolhuang</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://huangguolong1314.github.io/2022/02/09/mySql%E5%AD%A6%E4%B9%A0/">https://huangguolong1314.github.io/2022/02/09/mySql学习/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://huangguolong1314.github.io" target="_blank">guolhuang</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E5%8D%9A%E5%AE%A2/">博客</a></div><div class="post_share"><div class="social-share" data-image="/images/mysql/mysql-logo.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css"/><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js"></script></div></div><div class="post-reward"><button class="reward-button"><i class="fas fa-qrcode"></i> 打赏<div class="reward-main"><ul class="reward-all"><li class="reward-item"><img class="post-qr-code__img" src="/img/wechat.jpg" alt="wechat" onclick="window.open('/img/wechat.jpg')"/><div class="post-qr-code__desc">wechat</div></li><li class="reward-item"><img class="post-qr-code__img" src="/img/wechat.jpg" alt="alipay" onclick="window.open('/img/wechat.jpg')"/><div class="post-qr-code__desc">alipay</div></li></ul></div></button></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2021/06/21/%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0%E6%90%9E%E5%AE%9Anginx%E9%85%8D%E7%BD%AE/"><img class="next-cover" data-src="/images/nginx/cover.png" onerror="onerror=null;src='/img/404.jpg'"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">nginx详解</div></div></a></div></nav><div class="relatedPosts"><div class="relatedPosts_headline"><i class="fas fa-thumbs-up fa-fw"></i><span> 相关推荐</span></div><div class="relatedPosts_list"><div class="relatedPosts_item"><a href="/2020/07/24/解决hexo博客文章太长导致的显示不全问题/" title="解决hexo博客文章太长导致的显示不全的问题"><img class="relatedPosts_cover" data-src="https://cdn.jsdelivr.net/gh/jerryc127/CDN/img/hexo-theme-butterfly-doc-cover.jpg"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="far fa-calendar-alt fa-fw"></i> 2020-07-24</div><div class="relatedPosts_title">解决hexo博客文章太长导致的显示不全的问题</div></div></a></div><div class="relatedPosts_item"><a href="/2020/07/01/hexo+github快速搭建博客/" title="hexo + github 快速搭建博客"><img class="relatedPosts_cover" data-src="https://cdn.jsdelivr.net/gh/jerryc127/CDN/img/hexo-theme-butterfly-doc-cover.jpg"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="far fa-calendar-alt fa-fw"></i> 2020-07-01</div><div class="relatedPosts_title">hexo + github 快速搭建博客</div></div></a></div></div></div><hr><div id="post-comment"><div class="comment_headling"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div><div class="vcomment" id="vcomment"></div><script src="https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js"></script><script>var requestSetting = function (from,set) {
+  var from = from
+  var setting = set.split(',').filter(function(item){
+  return from.indexOf(item) > -1
+  });
+  setting = setting.length == 0 ? from :setting;
+  return setting
+}
+
+var guestInfo = requestSetting(['nick','mail','link'],'nick,mail,link')
+var requiredFields = requestSetting(['nick','mail'],'false')
+
+window.valine = new Valine({
+  el:'#vcomment',
+  appId: 'FlsfpLkCjk3itJM3iyTD9VWV-gzGzoHsz',
+  appKey: 'F6NgK7UBaqIxKOBO22ikWQxL',
+  placeholder: '記得留下你的暱稱和郵箱....可以快速收到回復',
+  avatar: 'monsterid',
+  meta: guestInfo,
+  pageSize: '10',
+  lang: 'zh-CN',
+  recordIP: false,
+  serverURLs: '',
+  emojiCDN: '',
+  emojiMaps: "",
+  enableQQ: true,
+  requiredFields: requiredFields
+});</script></div></article></main><footer id="footer" data-type="color"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2022 By guolhuang</div><div class="footer_custom_text">今日事,今日毕</div></div></footer></div><section class="rightside" id="rightside"><div id="rightside-config-hide"><button id="readmode" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="font_plus" title="放大字体"><i class="fas fa-plus"></i></button><button id="font_minus" title="缩小字体"><i class="fas fa-minus"></i></button><button class="translate_chn_to_cht" id="translateLink" title="简繁转换">繁</button><button id="darkmode" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button></div><div id="rightside-config-show"><button id="rightside_config" title="设置"><i class="fas fa-cog"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="scroll_to_comment fas fa-comments"></i></a><button class="close" id="mobile-toc-button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></section><div class="search-dialog" id="local-search"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div></div><hr/><div id="local-search-results"><div id="local-hits"></div><div id="local-stats"><div class="local-search-stats__hr" id="hr"><span>由</span> <a href="https://github.com/wzpan/hexo-generator-search" target="_blank" rel="noopener" style="color:#49B1F5;">hexo-generator-search</a>
+ <span>提供支持</span></div></div></div><span class="search-close-button"><i class="fas fa-times"></i></span></div><div class="search-mask"></div><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/live2d-widget/autoload.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="/js/third-party/fireworks.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><script id="ribbon_piao" mobile="false" src="/js/third-party/piao.js"></script><script src="/js/third-party/activate-power-mode.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page/instantpage.min.js" type="module" defer></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload/dist/lazyload.iife.min.js" async></script><script src="/js/search/local-search.js"></script></body></html>

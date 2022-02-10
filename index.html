@@ -1,0 +1,264 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>guolhuang</title><meta name="description" content="时间真的能改变一切吗？"><meta name="author" content="guolhuang"><meta name="copyright" content="guolhuang"><meta name="format-detection" content="telephone=no"><link rel="shortcut icon" href="/img/caihong.png"><link rel="canonical" href="https://huangguolong1314.github.io/"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//fonts.googleapis.com" crossorigin="crossorigin"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><meta property="og:type" content="website"><meta property="og:title" content="guolhuang"><meta property="og:url" content="https://huangguolong1314.github.io/"><meta property="og:site_name" content="guolhuang"><meta property="og:description" content="时间真的能改变一切吗？"><meta property="og:image" content="https://huangguolong1314.github.io/img/avatar.png"><meta property="article:published_time" content="2022-02-10T09:03:53.408Z"><meta property="article:modified_time" content="2022-02-10T09:03:53.408Z"><meta name="twitter:card" content="summary"><script>var activateDarkMode = function () {
+  document.documentElement.setAttribute('data-theme', 'dark')
+  if (document.querySelector('meta[name="theme-color"]') !== null) {
+    document.querySelector('meta[name="theme-color"]').setAttribute('content', '#000')
+  }
+}
+var activateLightMode = function () {
+  document.documentElement.setAttribute('data-theme', 'light')
+  if (document.querySelector('meta[name="theme-color"]') !== null) {
+    document.querySelector('meta[name="theme-color"]').setAttribute('content', '#fff')
+  }
+}
+
+var getCookies = function (name) {
+  const value = `; ${document.cookie}`
+  const parts = value.split(`; ${name}=`)
+  if (parts.length === 2) return parts.pop().split(';').shift()
+}
+
+var autoChangeMode = 'false'
+var t = getCookies('theme')
+if (autoChangeMode === '1') {
+  var isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+  var isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+  var isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+  var hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+  if (t === undefined) {
+    if (isLightMode) activateLightMode()
+    else if (isDarkMode) activateDarkMode()
+    else if (isNotSpecified || hasNoSupport) {
+      console.log('You specified no preference for a color scheme or your browser does not support it. I Schedule dark mode during night time.')
+      var now = new Date()
+      var hour = now.getHours()
+      var isNight = hour <= 6 || hour >= 18
+      isNight ? activateDarkMode() : activateLightMode()
+    }
+    window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+      if (Cookies.get('theme') === undefined) {
+        e.matches ? activateDarkMode() : activateLightMode()
+      }
+    })
+  } else if (t === 'light') activateLightMode()
+  else activateDarkMode()
+} else if (autoChangeMode === '2') {
+  now = new Date()
+  hour = now.getHours()
+  isNight = hour <= 6 || hour >= 18
+  if (t === undefined) isNight ? activateDarkMode() : activateLightMode()
+  else if (t === 'light') activateLightMode()
+  else activateDarkMode()
+} else {
+  if (t === 'dark') activateDarkMode()
+  else if (t === 'light') activateLightMode()
+}</script><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Titillium+Web&amp;display=swap"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"找不到您查询的内容:${query}"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  bookmark: {
+    message_prev: '按',
+    message_next: '键将本页加入书签'
+  },
+  runtime_unit: '天',
+  runtime: false,
+  copyright: {"languages":{"author":"作者: guolhuang","link":"链接: ","source":"来源: guolhuang","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  ClickShowText: undefined,
+  medium_zoom: false,
+  fancybox: true,
+  Snackbar: {"bookmark":{"message_prev":"按","message_next":"键将本页加入书签"},"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#121212","position":"bottom-left"},
+  justifiedGallery: {
+    js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+    css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+  },
+  baiduPush: false,
+  highlightCopy: true,
+  highlightLang: true,
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isanchor: false    
+}</script><script>var GLOBAL_CONFIG_SITE = { 
+  isPost: false,
+  isHome: true,
+  isHighlightShrink: false,
+  isSidebar: false
+  }</script><noscript><style>
+#nav {
+  opacity: 1
+}
+.justified-gallery img{
+  opacity: 1
+}
+</style></noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/sviptzk/HexoStaticFile@latest/Hexo/css/custom.min.css"><meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="guolhuang" type="application/atom+xml">
+</head><body><canvas class="fireworks"></canvas><div id="mobile-sidebar"><div id="menu_mask"></div><div id="mobile-sidebar-menus"><div class="mobile_author_icon"><img class="avatar-img" src="/img/avatar.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="mobile_post_data"><div class="mobile_data_item is-center"><div class="mobile_data_link"><a href="/archives/"><div class="headline">文章</div><div class="length_num">7</div></a></div></div><div class="mobile_data_item is-center">      <div class="mobile_data_link"><a href="/tags/"><div class="headline">标签</div><div class="length_num">4</div></a></div></div><div class="mobile_data_item is-center">     <div class="mobile_data_link"><a href="/categories/"><div class="headline">分类</div><div class="length_num">4</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 链接</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div><div class="menus_item"><a class="site-page" href="/leave/"><i class="fa-fw fas fa-comment-dots"></i><span> 留言板</span></a></div></div></div></div><div id="body-wrap"><header class="full_page" id="page-header" style="background-image: url(/img/beijing6.jpg)"><nav id="nav"><span class="pull-left" id="blog_name"><a class="blog_title" id="site-name" href="/">guolhuang</a></span><span class="pull-right menus"><div id="search_button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 链接</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div><div class="menus_item"><a class="site-page" href="/leave/"><i class="fa-fw fas fa-comment-dots"></i><span> 留言板</span></a></div></div><span class="toggle-menu close"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></span></span></nav><div id="site-info"><h1 id="site_title">guolhuang</h1><div id="site_subtitle"><span id="subtitle"></span></div><div id="site_social_icons"><a class="social-icon" href="https://github.com/huangguolong1314" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:1161995249@qq.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div id="scroll_down"><i class="fas fa-angle-down scroll-down-effects"></i></div></header><main class="layout_page" id="content-inner"><div class="recent-posts" id="recent-posts"><div class="recent-post-item"><div class="post_cover left_radius"><a href="/2022/02/09/mySql%E5%AD%A6%E4%B9%A0/" title="MySql学习 —— 子查询(where、from、exists) 及 连接查询(left join、right join、inner join、union join)">     <img class="post_bg" data-src="/images/mysql/mysql-logo.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="MySql学习 —— 子查询(where、from、exists) 及 连接查询(left join、right join、inner join、union join)"></a></div><div class="recent-post-info"><a class="article-title" href="/2022/02/09/mySql%E5%AD%A6%E4%B9%A0/" title="MySql学习 —— 子查询(where、from、exists) 及 连接查询(left join、right join、inner join、union join)">MySql学习 —— 子查询(where、from、exists) 及 连接查询(left join、right join、inner join、union join)</a><div class="article-meta-wrap"><time class="post-meta__date" title="发表于 2022-02-09 15:30:00"><i class="far fa-calendar-alt"></i>2022-02-09</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/hexo/">hexo</a></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fas fa-tag article-meta__icon"></i><a class="article-meta__tags" href="/tags/%E5%8D%9A%E5%AE%A2/">博客</a></span></div><div class="content">目录
+子查询
+1、where型子查询：把内层查询的结果作为外层查询的比较条件
+2、from型子查询：把内层的查询结果当成临时表，供外层sql再次查询。查询结果集可以当成表看待。临时表要使用一个别名
+3、exists型子查询：把外层sql的结果，拿到内层sql去测试，如果内层的sql成立，则该行取出。内层查询是exists后的查询
+4、any，in子查询
+5、子查询总结
+
+
+连接查询
+1、全相乘（不是全连接、连接查询），全相乘是做笛卡尔积
+2、左连接查询 left join … on …
+3、右连接查询 right join … on …
+4、内连接 inner join … on …
+5、全连接 full join … on …
+6、联合查询 union
+7、连接查询总结
+
+
+
+
+注：该mysql系列博客仅为个人学习笔记。
+使用goods表来练习子查询，表结构如下：
+所有数据(cat_id与category.cat_id关联)：
+类别表：
+mingoods(连接查询时作测试)：
+
+子查询1、where型子查询：把内层查询的结果作为外层查询的比较条件1.1 查询id最大的一件商品（使用排 ...</div></div></div><div class="recent-post-item"><div class="post_cover right_radius"><a href="/2021/06/21/%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0%E6%90%9E%E5%AE%9Anginx%E9%85%8D%E7%BD%AE/" title="nginx详解">     <img class="post_bg" data-src="/images/nginx/cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="nginx详解"></a></div><div class="recent-post-info"><a class="article-title" href="/2021/06/21/%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0%E6%90%9E%E5%AE%9Anginx%E9%85%8D%E7%BD%AE/" title="nginx详解">nginx详解</a><div class="article-meta-wrap"><time class="post-meta__date" title="发表于 2021-06-21 15:51:00"><i class="far fa-calendar-alt"></i>2021-06-21</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/%E7%BD%91%E7%BB%9C%E9%80%9A%E8%AE%AF%E5%8D%8F%E8%AE%AE/">网络通讯协议</a></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fas fa-tag article-meta__icon"></i><a class="article-meta__tags" href="/tags/https/">https</a></span></div><div class="content">目录
+安装nginx
+nginx配置
+基本结构
+主要配置含义
+nginx.conf配置文件的语法规则
+内置变量
+常用命令
+配置nginx开机自启
+配置nginx全局可用
+
+
+nginx常用功能配置
+反向代理
+访问控制
+6种负载均衡策略
+gzip压缩
+HTTP服务器
+动静分离
+请求限制
+正向代理
+图片防盗链
+适配PC或移动设备
+设置耳机域名
+配置HTTPS
+配置HTTP转HTTPS
+单页面项目history路由配置
+配置最高可用集群（双机热备）
+
+
+其它功能和技巧配置
+代理缓存
+访问日志
+错误日志
+静态资源服务器
+禁止指定user_agent
+请求过滤
+ab命令
+泛域名路径分离
+泛域名转发
+
+
+附nginx模块
+nginx模块分类
+模块清单
+
+
+
+
+安装nginx下载nginx的压缩包文件到根目录，官网下载地址：nginx.org/download/nginx-x.xx.xx.tar.gz    123yum update  # 更新系统软件cd &#x2F;wget nginx.org&#x2F;download&#x2F;nginx-1.22.2.tar.gz解压tar.gz压缩包文 ...</div></div></div><div class="recent-post-item"><div class="post_cover left_radius"><a href="/2020/09/02/docker-compose%E6%90%AD%E5%BB%BAMySQL%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%E9%9B%86%E7%BE%A4/" title="docker-compose搭建MySQL主从复制集群">     <img class="post_bg" data-src="/images/mysql/mysql-logo.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="docker-compose搭建MySQL主从复制集群"></a></div><div class="recent-post-info"><a class="article-title" href="/2020/09/02/docker-compose%E6%90%AD%E5%BB%BAMySQL%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%E9%9B%86%E7%BE%A4/" title="docker-compose搭建MySQL主从复制集群">docker-compose搭建MySQL主从复制集群</a><div class="article-meta-wrap"><time class="post-meta__date" title="发表于 2020-09-02 12:00:00"><i class="far fa-calendar-alt"></i>2020-09-02</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/redis/">redis</a></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fas fa-tag article-meta__icon"></i><a class="article-meta__tags" href="/tags/redis%E9%9B%86%E7%BE%A4/">redis集群</a></span></div><div class="content">前言随着应用业务数据不断的增大，应用的 响应速度不断下降，在检测过程中我们不难发现大多数的请求都是 查询操作。此时，我们可以将数据库扩展成 主从复制模式，将 读操作 和 写操作 分离开来，多台数据库 分摊请求，从而 减少单库 的 访问压力，进而应用得到优化。
+正文主从复制的方式
+MySQL 5.6开始主从复制有两种方式：基于日志（binlog）和 基于 GTID（全局事务标示符）。本文只涉及基于日志 binlog 的 主从配置。
+主从复制的流程
+MySQL 同步操作通过 3 个线程实现，其基本步骤如下：
+
+主从服务器将数据的更新记录到二进制日志（Binary log）中，用于记录二进制日志事件，这一步由主库线程完成；
+从库 将 主库 的 二进制日志 复制到本地的 中继日志（Relay log），这一步由 从库 I/O 线程 完成；
+从库 读取 中继日志 中的 事件，将其重放到数据中，这一步由 从库 SQL 线程 完成。
+
+主从模式的优点
+
+负载均衡 通常情况下，会使用 主服务器 对数据进行 更新、删除 和 新建 等操作，而将 查询 工作落到 从库 头上。
+
+异地容灾备份 可以将主服务器 ...</div></div></div><div class="recent-post-item"><div class="post_cover right_radius"><a href="/2020/08/08/%E4%B8%80%E4%B8%AA%E6%95%85%E4%BA%8B%E8%AE%B2%E5%AE%8Chttps/" title="一个故事讲完https">     <img class="post_bg" data-src="/images/posts/tu10.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="一个故事讲完https"></a></div><div class="recent-post-info"><a class="article-title" href="/2020/08/08/%E4%B8%80%E4%B8%AA%E6%95%85%E4%BA%8B%E8%AE%B2%E5%AE%8Chttps/" title="一个故事讲完https">一个故事讲完https</a><div class="article-meta-wrap"><time class="post-meta__date" title="发表于 2020-08-08 12:00:00"><i class="far fa-calendar-alt"></i>2020-08-08</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/%E7%BD%91%E7%BB%9C%E9%80%9A%E8%AE%AF%E5%8D%8F%E8%AE%AE/">网络通讯协议</a></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fas fa-tag article-meta__icon"></i><a class="article-meta__tags" href="/tags/https/">https</a></span></div><div class="content">1. 序言在开始之前，我们来虚构两个人物， 一个是位于中国的张大胖（怎么又是你？！）， 还有一个是位于米国的Bill (怎么还是你？！)。这俩哥们隔着千山万水，通过网络联系上了， 两个人臭味相投，聊得火热。此时正值米国大选， 张大胖亲切地“致电”Bill, 对米国总统大选的情况表示强烈地关注。 Bill则回电说谢谢关心米国人的事情我们米国人自己做主，不用你们歪果仁瞎操心……
+张大胖继续“致电”说其实我们支持特朗普， 因为希拉里太情绪化，太难打交道了， 我们挺希望看到特朗普上台这样米国就会变成 The Divided State of America ......
+Bill 回电： 拉倒你吧你， 我们米国的政体有着强大的纠错性， 虽然有时候发展得慢， 有时候会走上岔路， 但很快就会回到正途，几百年来稳定得很，不像你们像坐了过山车一样…..
+两个人越聊越投机，天南地北，海阔天空，还夹杂着不少隐私的话题。
+2. 总是有一种被偷看的感觉有一天， Bill 突然意识到： 坏了， 我们的通信是明文的， 这简直就是网络上裸奔啊， 任何一个不怀好意的家伙都可以监听我们通信，打开我们发送的数据包，窥探我 ...</div></div></div><div class="recent-post-item"><div class="post_cover left_radius"><a href="/2020/07/24/git%E8%AF%A6%E8%A7%A3/" title="git详解">     <img class="post_bg" data-src="/images/git/git1.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="git详解"></a></div><div class="recent-post-info"><a class="article-title" href="/2020/07/24/git%E8%AF%A6%E8%A7%A3/" title="git详解">git详解</a><div class="article-meta-wrap"><time class="post-meta__date" title="发表于 2020-07-24 12:00:00"><i class="far fa-calendar-alt"></i>2020-07-24</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/git%E8%AF%A6%E8%A7%A3/">git详解</a></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fas fa-tag article-meta__icon"></i><a class="article-meta__tags" href="/tags/git/">git</a></span></div><div class="content">1. Git是什么（what）（-）概述Git是分布式版本控制系统，与SVN类似的集中化版本控制系统相比，集中化版本控制系统如果中央服务器宕机则会影响数据和协同开发。
+Git是分布式的版本控制系统，客户端不只是提取最新版本的快照，而且将整个代码仓库镜像复制下来。如果任何协同工作用的服务器发生故障了，也可以用任何一个代码仓库来恢复。而且在协作服务器宕机期间，你也可以提交代码到本地仓库，当协作服务器正常工作后，你再将本地仓库同步到远程仓库。
+（二）特性
+能够对文件版本控制和多人协作开发
+拥有强大的分支特性，所以能够灵活地以不同的工作流协同开发
+分布式版本控制系统，即使协作服务器宕机，也能继续提交代码或文件到本地仓库，当协作服务器恢复正常工作时，再将本地仓库同步到远程仓库。
+当团队中某个成员完成某个功能时，通过pull request操作来通知其他团队成员，其他团队成员能够review code后再合并代码。
+
+2. 为什么要用Git（why）
+能够对文件版本控制和多人协作开发
+拥有强大的分支特性，所以能够灵活地以不同的工作流协同开发
+分布式版本控制系统，即使协作服务器宕机，也能继续提交代码 ...</div></div></div><div class="recent-post-item"><div class="post_cover right_radius"><a href="/2020/07/24/%E8%A7%A3%E5%86%B3hexo%E5%8D%9A%E5%AE%A2%E6%96%87%E7%AB%A0%E5%A4%AA%E9%95%BF%E5%AF%BC%E8%87%B4%E7%9A%84%E6%98%BE%E7%A4%BA%E4%B8%8D%E5%85%A8%E9%97%AE%E9%A2%98/" title="解决hexo博客文章太长导致的显示不全的问题">     <img class="post_bg" data-src="https://cdn.jsdelivr.net/gh/jerryc127/CDN/img/hexo-theme-butterfly-doc-cover.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="解决hexo博客文章太长导致的显示不全的问题"></a></div><div class="recent-post-info"><a class="article-title" href="/2020/07/24/%E8%A7%A3%E5%86%B3hexo%E5%8D%9A%E5%AE%A2%E6%96%87%E7%AB%A0%E5%A4%AA%E9%95%BF%E5%AF%BC%E8%87%B4%E7%9A%84%E6%98%BE%E7%A4%BA%E4%B8%8D%E5%85%A8%E9%97%AE%E9%A2%98/" title="解决hexo博客文章太长导致的显示不全的问题">解决hexo博客文章太长导致的显示不全的问题</a><div class="article-meta-wrap"><time class="post-meta__date" title="发表于 2020-07-24 12:00:00"><i class="far fa-calendar-alt"></i>2020-07-24</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/hexo/">hexo</a></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fas fa-tag article-meta__icon"></i><a class="article-meta__tags" href="/tags/%E5%8D%9A%E5%AE%A2/">博客</a></span></div><div class="content">1. 问题前两天准备发布上一篇介绍https的文章,结果写好markdown之后本地测试发现问题:
+
+文章显示最后内容突然缺失
+导航栏，底部的返回顶部按钮均异常
+查看网页源代码，发现内容消失的地方之后内容全部是空格
+
+尝试解决问题,发现文章变短显示就正常,使用hexo新建blog,测试长文显示OK,换上同样的主题也没问题,说明是我的环境配置哪里出错.
+2. 解决折腾几天,重装hexo-xx相关库,更新hexo版本,库版本,拿出错的配置和正常的去比较,终于发现问题出现在package.json的“hexo-browsersync”: “^0.3.0”, 将这一行注释掉或者删除就OK然后来到这个库的github的issues,发现不少人也遇到了这个问题,可惜我是找了好久才发现
+3. 其他另外总结其他遇到的问题
+hexo server报错：Cannot GET /
+解决方案：npm audit fix 查看缺少哪些模块，npm install xxx 安装
+检查hexo相关库：
+npm install -g npm-check
+npm-check
+npm install -g npm-upg ...</div></div></div><div class="recent-post-item"><div class="post_cover left_radius"><a href="/2020/07/01/hexo+github%E5%BF%AB%E9%80%9F%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2/" title="hexo + github 快速搭建博客">     <img class="post_bg" data-src="https://cdn.jsdelivr.net/gh/jerryc127/CDN/img/hexo-theme-butterfly-doc-cover.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="hexo + github 快速搭建博客"></a></div><div class="recent-post-info"><a class="article-title" href="/2020/07/01/hexo+github%E5%BF%AB%E9%80%9F%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2/" title="hexo + github 快速搭建博客">hexo + github 快速搭建博客</a><div class="article-meta-wrap"><time class="post-meta__date" title="发表于 2020-07-01 17:20:00"><i class="far fa-calendar-alt"></i>2020-07-01</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/hexo/">hexo</a></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fas fa-tag article-meta__icon"></i><a class="article-meta__tags" href="/tags/%E5%8D%9A%E5%AE%A2/">博客</a></span></div><div class="content">hexo + github 快速搭建博客话不多说，咱们直接进入主题～
+1.新建城池既然要给人访问，如果没有存放代码的地方，既不是白日做梦了，首先上 全球最大同性交友网站 github 新建一个仓库，仓库名必须为 &lt;user-name&gt;.github.io, 其中 &lt;user-name&gt; 就是我们github的昵称，注意必须一样，不能自定义，不要问我为什么，问了我也不会说。
+2.手握神器打开命令行，输入下面的命令，全局安装神奇 hexo
+1npm install hexo -g
+
+3. 组建大军hexo 神器使用口诀如下 急急如律令，嘿嘿哈。。。sorry sorry 跑题了，口诀如下，所有口诀掐完，紧跟 hexo s，之后在浏览器访问 localhost:4000 神器搭配，手速要快。
+123hexo init &#x2F;&#x2F; 初始化hexo s &#x2F;&#x2F; 本地服务启动
+
+我们的文件夹下的文件,主要关注以下几个文件
+
+source 里面存放我们的页面和文章 _post 下都是文章，其他则为页面
+themes 里面是我们下载的主题
+pub ...</div></div></div><nav id="pagination"><div class="pagination"><span class="page-number current">1</span></div></nav></div><div class="aside_content" id="aside_content"><div class="card-widget card-info"><div class="card-content"><div class="card-info-avatar is-center"><img class="avatar-img" src="/img/avatar.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/><div class="author-info__name">guolhuang</div><div class="author-info__description">时间真的能改变一切吗？</div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives"><div class="headline">文章</div><div class="length_num">7</div></a></div><div class="card-info-data-item is-center">      <a href="/tags"><div class="headline">标签</div><div class="length_num">4</div></a></div><div class="card-info-data-item is-center">     <a href="/categories"><div class="headline">分类</div><div class="length_num">4</div></a></div></div><div class="card-info-bookmark is-center"><button class="button--animated" id="bookmark-it" title="加入书签"><i class="fas fa-bookmark"></i><span>加入书签</span></button></div><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/huangguolong1314" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:1161995249@qq.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div></div><div class="card-widget card-announcement"><div class="card-content"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>公告</span></div><div class="announcement_content">坚持记录</div></div></div><div class="card-widget card-recent-post"><div class="card-content"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-recent-item"><div class="aside-recent-post"><a href="/2022/02/09/mySql%E5%AD%A6%E4%B9%A0/"><div class="aside-post-cover"><img class="aside-post-bg" data-src="/images/mysql/mysql-logo.png" onerror="this.onerror=null;this.src='/img/404.jpg'" title="MySql学习 —— 子查询(where、from、exists) 及 连接查询(left join、right join、inner join、union join)" alt="MySql学习 —— 子查询(where、from、exists) 及 连接查询(left join、right join、inner join、union join)"/></div><div class="aside-post-title"><div class="aside-post_title" href="/2022/02/09/mySql%E5%AD%A6%E4%B9%A0/" title="MySql学习 —— 子查询(where、from、exists) 及 连接查询(left join、right join、inner join、union join)">MySql学习 —— 子查询(where、from、exists) 及 连接查询(left join、right join、inner join、union join)</div><time class="aside-post_meta post-meta__date" title="发表于 2022-02-09 15:30:00">2022-02-09</time></div></a></div><div class="aside-recent-post"><a href="/2021/06/21/%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0%E6%90%9E%E5%AE%9Anginx%E9%85%8D%E7%BD%AE/"><div class="aside-post-cover"><img class="aside-post-bg" data-src="/images/nginx/cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" title="nginx详解" alt="nginx详解"/></div><div class="aside-post-title"><div class="aside-post_title" href="/2021/06/21/%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0%E6%90%9E%E5%AE%9Anginx%E9%85%8D%E7%BD%AE/" title="nginx详解">nginx详解</div><time class="aside-post_meta post-meta__date" title="发表于 2021-06-21 15:51:00">2021-06-21</time></div></a></div><div class="aside-recent-post"><a href="/2020/09/02/docker-compose%E6%90%AD%E5%BB%BAMySQL%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%E9%9B%86%E7%BE%A4/"><div class="aside-post-cover"><img class="aside-post-bg" data-src="/images/mysql/mysql-logo.png" onerror="this.onerror=null;this.src='/img/404.jpg'" title="docker-compose搭建MySQL主从复制集群" alt="docker-compose搭建MySQL主从复制集群"/></div><div class="aside-post-title"><div class="aside-post_title" href="/2020/09/02/docker-compose%E6%90%AD%E5%BB%BAMySQL%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%E9%9B%86%E7%BE%A4/" title="docker-compose搭建MySQL主从复制集群">docker-compose搭建MySQL主从复制集群</div><time class="aside-post_meta post-meta__date" title="发表于 2020-09-02 12:00:00">2020-09-02</time></div></a></div><div class="aside-recent-post"><a href="/2020/08/08/%E4%B8%80%E4%B8%AA%E6%95%85%E4%BA%8B%E8%AE%B2%E5%AE%8Chttps/"><div class="aside-post-cover"><img class="aside-post-bg" data-src="/images/posts/tu10.png" onerror="this.onerror=null;this.src='/img/404.jpg'" title="一个故事讲完https" alt="一个故事讲完https"/></div><div class="aside-post-title"><div class="aside-post_title" href="/2020/08/08/%E4%B8%80%E4%B8%AA%E6%95%85%E4%BA%8B%E8%AE%B2%E5%AE%8Chttps/" title="一个故事讲完https">一个故事讲完https</div><time class="aside-post_meta post-meta__date" title="发表于 2020-08-08 12:00:00">2020-08-08</time></div></a></div><div class="aside-recent-post"><a href="/2020/07/24/git%E8%AF%A6%E8%A7%A3/"><div class="aside-post-cover"><img class="aside-post-bg" data-src="/images/git/git1.png" onerror="this.onerror=null;this.src='/img/404.jpg'" title="git详解" alt="git详解"/></div><div class="aside-post-title"><div class="aside-post_title" href="/2020/07/24/git%E8%AF%A6%E8%A7%A3/" title="git详解">git详解</div><time class="aside-post_meta post-meta__date" title="发表于 2020-07-24 12:00:00">2020-07-24</time></div></a></div></div></div></div><div class="card-widget card-categories"><div class="card-content"><div class="item-headline"><i class="fas fa-folder-open"></i><span>分类</span></div><ul class="card-category-list">
+            <li class="card-category-list-item "><a class="card-category-list-link" href="/categories/git%E8%AF%A6%E8%A7%A3/"><span class="card-category-list-name">git详解</span><span class="card-category-list-count">1</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/hexo/"><span class="card-category-list-name">hexo</span><span class="card-category-list-count">3</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/redis/"><span class="card-category-list-name">redis</span><span class="card-category-list-count">1</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E7%BD%91%E7%BB%9C%E9%80%9A%E8%AE%AF%E5%8D%8F%E8%AE%AE/"><span class="card-category-list-name">网络通讯协议</span><span class="card-category-list-count">2</span></a></li>
+                       
+            </ul></div></div><div class="card-widget card-tags"><div class="card-content"><div class="item-headline"><i class="fa fa-tags" aria-hidden="true"></i><span>标签</span><script type="text/javascript" charset="utf-8" src="/js/tagcloud.js"></script><script type="text/javascript" charset="utf-8" src="/js/tagcanvas.js"></script><div class="widget tagcloud" id="myCanvasContainer" align="center"><canvas id="resCanvas" width="200" height="200" style="width=100%"><a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/https/" style="font-size: 15px;">https</a> <a href="/tags/redis%E9%9B%86%E7%BE%A4/" style="font-size: 10px;">redis集群</a> <a href="/tags/%E5%8D%9A%E5%AE%A2/" style="font-size: 20px;">博客</a></canvas></div></div></div></div><div class="card-widget card-archives"><div class="card-content"><div class="item-headline"><i class="fas fa-archive"></i><span>归档</span></div><ul class="card-archive-list"><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2022/02/"><span class="card-archive-list-date">2022年-02月</span><span class="card-archive-list-count">1</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2021/06/"><span class="card-archive-list-date">2021年-06月</span><span class="card-archive-list-count">1</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2020/09/"><span class="card-archive-list-date">2020年-09月</span><span class="card-archive-list-count">1</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2020/08/"><span class="card-archive-list-date">2020年-08月</span><span class="card-archive-list-count">1</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2020/07/"><span class="card-archive-list-date">2020年-07月</span><span class="card-archive-list-count">3</span></a></li></ul></div></div><div class="card-widget card-webinfo"><div class="card-content"><div class="item-headline"><i class="fas fa-chart-line"></i><span>网站资讯</span></div><div class="webinfo"><div class="webinfo-item"><div class="webinfo-article-name">文章数目 :</div><div class="webinfo-article-count">7</div></div><div class="webinfo-item">      <div class="webinfo-site-uv-name">本站访客数 :</div><div class="webinfo-site-uv-count" id="busuanzi_value_site_uv"></div></div><div class="webinfo-item"><div class="webinfo-site-name">本站总访问量 :</div><div class="webinfo-site-pv-count" id="busuanzi_value_site_pv"></div></div></div></div></div></div></main><footer id="footer" data-type="color"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2022 By guolhuang</div><div class="footer_custom_text">今日事,今日毕</div></div></footer></div><section class="rightside" id="rightside"><div id="rightside-config-hide"><button class="translate_chn_to_cht" id="translateLink" title="简繁转换">繁</button><button id="darkmode" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button></div><div id="rightside-config-show"><button id="rightside_config" title="设置"><i class="fas fa-cog"></i></button><button id="go-up" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></section><div class="search-dialog" id="local-search"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div></div><hr/><div id="local-search-results"><div id="local-hits"></div><div id="local-stats"><div class="local-search-stats__hr" id="hr"><span>由</span> <a href="https://github.com/wzpan/hexo-generator-search" target="_blank" rel="noopener" style="color:#49B1F5;">hexo-generator-search</a>
+ <span>提供支持</span></div></div></div><span class="search-close-button"><i class="fas fa-times"></i></span></div><div class="search-mask"></div><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/live2d-widget/autoload.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="/js/third-party/fireworks.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><script id="ribbon_piao" mobile="false" src="/js/third-party/piao.js"></script><script src="/js/third-party/activate-power-mode.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page/instantpage.min.js" type="module" defer></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload/dist/lazyload.iife.min.js" async></script><script src="/js/search/local-search.js"></script><script src="https://cdn.jsdelivr.net/npm/typed.js"></script><script>var subtitleType = function () {
+  var subtitleEffect = true
+  fetch('https://api.btstu.cn/yan/api.php?charset=utf-8&encode=json',)
+    .then(function (res) {
+      return res.json()
+    })
+    .then(function (data) {
+      if (subtitleEffect) {
+        var sub = "事压不垮人，但是情绪会压垮人。所以不要被情绪所绑架，要学会与自己和解。,试着放轻松些，谋事在人，成事在天，只要还活着机会还会降临给有准备的人。,你想拥有你没有的能力，就要付出你没有付出的努力".length == 0 ? new Array() : "事压不垮人，但是情绪会压垮人。所以不要被情绪所绑架，要学会与自己和解。,试着放轻松些，谋事在人，成事在天，只要还活着机会还会降临给有准备的人。,你想拥有你没有的能力，就要付出你没有付出的努力".split(',')
+        var both = sub.unshift(data.text)
+        var typed = new Typed('#subtitle', {
+          strings: sub,
+          startDelay: 300,
+          typeSpeed: 150,
+          loop: true,
+          backSpeed: 50,
+        })
+      } else {
+        document.getElementById('subtitle').innerHTML = data.text
+      }
+    })
+    .catch(function (err) {
+      console.error(err)
+    })
+}
+window.addEventListener('load', subtitleType)
+</script><script>'use strict';'serviceWorker'in navigator&&navigator.serviceWorker.register('service-worker.js').then(function(a){a.onupdatefound=function(){var b=a.installing;b.onstatechange=function(){switch(b.state){case'installed':navigator.serviceWorker.controller?console.log('New or updated content is available.'):console.log('Content is now available offline!');break;case'redundant':console.error('The installing service worker became redundant.');}}}}).catch(function(a){console.error('Error during service worker registration:',a)});
+</script></body></html>
