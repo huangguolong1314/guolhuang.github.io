@@ -70,6 +70,33 @@
   </entry>
   
   <entry>
+    <title>CAP理论&amp;BASE理论.</title>
+    <link href="https://huangguolong1314.github.io/2023/07/18/cap&amp;base/CAP%E7%90%86%E8%AE%BA&amp;BASE%E7%90%86%E8%AE%BA/"/>
+    <id>https://huangguolong1314.github.io/2023/07/18/cap&amp;base/CAP%E7%90%86%E8%AE%BA&amp;BASE%E7%90%86%E8%AE%BA/</id>
+    <published>2023-07-18T12:00:00.000Z</published>
+    <updated>2023-07-18T13:08:31.635Z</updated>
+    
+    <content type="html"><![CDATA[<ol><li><p><code>C（    Consistency）</code>一致性：意思是，写操作之后的读操作，必须返回该值，举例：某条数据记录是v0，用户向G1发起一个写操作，将其改为v1，接下来，用户的读操作就会得到v1，这就叫一致性。问题是，用户有可能向G2发起该操作，由于G2的值没有发生变化，因此返回的是v1，G1和G2读操作的结果不一致，这就不满足一致性了。<br><img src= "/img/loading.gifs" data-src="/images/cap&base/1.png" alt=""><br>为了让G2也能变为G1，就要在G1写操作的时候，让G1和G2发送一条消息，要求G2页改成v1，这样的话，用户向G2发起读操作，也能得到v1。</p></li><li><p><code>A（    Availability）</code>可用性：意思是只要收到用户的请求，服务器就必须给出回应，用户可以选择向G1或G2发起读操作，不管是哪台服务器，只要收到请求，就必须告诉用户，到底是v0还是v1，否则就不满足可用性。</p></li><li><p><code>P（    Partition tolerance）</code>分区容错：大多数分布式系统都分布在多个子网络，每个子网络就叫做一个区，分区容错的意思是，区间通信可能失败，比如一台服务器放在中国，另一台服务器放在美国，这就是两个区，它们之间可能无法通信，在系统设计的时候必须考虑到这种情况。<br><img src= "/img/loading.gifs" data-src="/images/cap&base/2.png" alt=""><br><code>C（Consistency）和A（Availability）</code>的矛盾：一致性和可用性，为什么不可能同时成立？因为可能通信失败（即出现分区容错）。如果保证G2的一致性，那么G1必须在写 操作时，锁定G2的读操作和鞋操作，只有数据同步后，才能重新开放读写，锁定期间G2不能读写，没有可用性。如果保证G2的可用性，那么势必不能锁定G2，所以一致性就不成立。综上所述，G2无法同时做到一致性和可用性，系统设计时只能选择一个目标，如果追求一致性，那么无法保证所有节点的可用性；如果追求所有节点的可用性，那就没法做到一致性。<br>在什么场合，可用性高于一致性？<br>举例来说，发布一张网页到CDN，多个服务器有这张网页的副本，后来发现一个错误，需要更新网页，这时只能每个服务器都更新一遍，一般来说，网页的更新不是特别强调一致性。短时期内，一些用户拿到老版本，另一些用户拿到新版本，问题不会特别大。当然所有人最终都会看到新版本。所以这个场合就是可用性高于一致性。</p></li></ol><p><code>Consistency（一致性-节点系统中所有可用的数据）</code>：在分布式环境下，一致性是指数据在多个副本之间能否保持一致的特性。在一致性的需求下，当一个系统在数据一致的状态下执行更新操作后，应该保证系统的数据仍然处于一致的状态；<br><code>Availability（可用性-每个请求会得到一个响应）</code>：可用性是指系统提供的服务必须一直处于可用的状态，对于用户的每一个操作请求总是能够在有限的时间内返回结果。这里的重点是“有限时间内”和“返回结果”；<br><code>Partition Tolerance（分区容错性-系统运作将不管可用性、分区、数据或通信的丢失）</code>：分区容错性约束了一个分布式系统具有如下特性：分布式系统在遇到任何网络分区故障的时候，仍然需要能够保证对外提供一致性和可用性的服务，除非是整个网络环境都发生了故障；</p><ol start="4"><li>BASE<br><code>Basically Available（基本可用）</code>：分布式系统在出现不可预知故障的时候，允许损失部分可用性；<br><code>Soft state（软状态）</code>：软状态也称为弱状态，和硬状态相对，是指允许系统中的数据存在中间状态，并认为该中间状态的存在不会影响系统的整体可用性，即允许系统在不通节点的数据副本之间进行数据同步的过程存在延时；<br><code>Eventually consistent（最终一致性）</code>：最终一致性强调的是系统中所有的数据副本，在经过一段时间的同步后，最终能够达到一个一致的状态。因此，最终一致性的本质是需要系统保证最终数据能够达到一致，而不需要实时保证系统数据的强一致性；</li></ol>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;ol&gt;
+&lt;li&gt;&lt;p&gt;&lt;code&gt;C（    Consistency）&lt;/code&gt;一致性：意思是，写操作之后的读操作，必须返回该值，举例：某条数据记录是v0，用户向G1发起一个写操作，将其改为v1，接下来，用户的读操作就会得到v1，这就叫一致性。问题是，用户有可能向G2发起该
+      
+    
+    </summary>
+    
+    
+      <category term="cap&amp;base" scheme="https://huangguolong1314.github.io/categories/cap-base/"/>
+    
+    
+      <category term="博客" scheme="https://huangguolong1314.github.io/tags/%E5%8D%9A%E5%AE%A2/"/>
+    
+  </entry>
+  
+  <entry>
     <title>入门-mysql学习笔记</title>
     <link href="https://huangguolong1314.github.io/2023/07/18/mysql/%E5%85%A5%E9%97%A8-mysql%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B01/"/>
     <id>https://huangguolong1314.github.io/2023/07/18/mysql/%E5%85%A5%E9%97%A8-mysql%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B01/</id>
@@ -92,33 +119,6 @@
     
     
       <category term="mysql" scheme="https://huangguolong1314.github.io/categories/mysql/"/>
-    
-    
-      <category term="博客" scheme="https://huangguolong1314.github.io/tags/%E5%8D%9A%E5%AE%A2/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>CAP理论&amp;BASE理论.</title>
-    <link href="https://huangguolong1314.github.io/2023/07/18/cap&amp;base/CAP%E7%90%86%E8%AE%BA&amp;BASE%E7%90%86%E8%AE%BA/"/>
-    <id>https://huangguolong1314.github.io/2023/07/18/cap&amp;base/CAP%E7%90%86%E8%AE%BA&amp;BASE%E7%90%86%E8%AE%BA/</id>
-    <published>2023-07-18T12:00:00.000Z</published>
-    <updated>2023-07-18T13:08:31.635Z</updated>
-    
-    <content type="html"><![CDATA[<ol><li><p><code>C（    Consistency）</code>一致性：意思是，写操作之后的读操作，必须返回该值，举例：某条数据记录是v0，用户向G1发起一个写操作，将其改为v1，接下来，用户的读操作就会得到v1，这就叫一致性。问题是，用户有可能向G2发起该操作，由于G2的值没有发生变化，因此返回的是v1，G1和G2读操作的结果不一致，这就不满足一致性了。<br><img src= "/img/loading.gifs" data-src="/images/cap&base/1.png" alt=""><br>为了让G2也能变为G1，就要在G1写操作的时候，让G1和G2发送一条消息，要求G2页改成v1，这样的话，用户向G2发起读操作，也能得到v1。</p></li><li><p><code>A（    Availability）</code>可用性：意思是只要收到用户的请求，服务器就必须给出回应，用户可以选择向G1或G2发起读操作，不管是哪台服务器，只要收到请求，就必须告诉用户，到底是v0还是v1，否则就不满足可用性。</p></li><li><p><code>P（    Partition tolerance）</code>分区容错：大多数分布式系统都分布在多个子网络，每个子网络就叫做一个区，分区容错的意思是，区间通信可能失败，比如一台服务器放在中国，另一台服务器放在美国，这就是两个区，它们之间可能无法通信，在系统设计的时候必须考虑到这种情况。<br><img src= "/img/loading.gifs" data-src="/images/cap&base/2.png" alt=""><br><code>C（Consistency）和A（Availability）</code>的矛盾：一致性和可用性，为什么不可能同时成立？因为可能通信失败（即出现分区容错）。如果保证G2的一致性，那么G1必须在写 操作时，锁定G2的读操作和鞋操作，只有数据同步后，才能重新开放读写，锁定期间G2不能读写，没有可用性。如果保证G2的可用性，那么势必不能锁定G2，所以一致性就不成立。综上所述，G2无法同时做到一致性和可用性，系统设计时只能选择一个目标，如果追求一致性，那么无法保证所有节点的可用性；如果追求所有节点的可用性，那就没法做到一致性。<br>在什么场合，可用性高于一致性？<br>举例来说，发布一张网页到CDN，多个服务器有这张网页的副本，后来发现一个错误，需要更新网页，这时只能每个服务器都更新一遍，一般来说，网页的更新不是特别强调一致性。短时期内，一些用户拿到老版本，另一些用户拿到新版本，问题不会特别大。当然所有人最终都会看到新版本。所以这个场合就是可用性高于一致性。</p></li></ol><p><code>Consistency（一致性-节点系统中所有可用的数据）</code>：在分布式环境下，一致性是指数据在多个副本之间能否保持一致的特性。在一致性的需求下，当一个系统在数据一致的状态下执行更新操作后，应该保证系统的数据仍然处于一致的状态；<br><code>Availability（可用性-每个请求会得到一个响应）</code>：可用性是指系统提供的服务必须一直处于可用的状态，对于用户的每一个操作请求总是能够在有限的时间内返回结果。这里的重点是“有限时间内”和“返回结果”；<br><code>Partition Tolerance（分区容错性-系统运作将不管可用性、分区、数据或通信的丢失）</code>：分区容错性约束了一个分布式系统具有如下特性：分布式系统在遇到任何网络分区故障的时候，仍然需要能够保证对外提供一致性和可用性的服务，除非是整个网络环境都发生了故障；</p><ol start="4"><li>BASE<br><code>Basically Available（基本可用）</code>：分布式系统在出现不可预知故障的时候，允许损失部分可用性；<br><code>Soft state（软状态）</code>：软状态也称为弱状态，和硬状态相对，是指允许系统中的数据存在中间状态，并认为该中间状态的存在不会影响系统的整体可用性，即允许系统在不通节点的数据副本之间进行数据同步的过程存在延时；<br><code>Eventually consistent（最终一致性）</code>：最终一致性强调的是系统中所有的数据副本，在经过一段时间的同步后，最终能够达到一个一致的状态。因此，最终一致性的本质是需要系统保证最终数据能够达到一致，而不需要实时保证系统数据的强一致性；</li></ol>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;ol&gt;
-&lt;li&gt;&lt;p&gt;&lt;code&gt;C（    Consistency）&lt;/code&gt;一致性：意思是，写操作之后的读操作，必须返回该值，举例：某条数据记录是v0，用户向G1发起一个写操作，将其改为v1，接下来，用户的读操作就会得到v1，这就叫一致性。问题是，用户有可能向G2发起该
-      
-    
-    </summary>
-    
-    
-      <category term="cap&amp;base" scheme="https://huangguolong1314.github.io/categories/cap-base/"/>
     
     
       <category term="博客" scheme="https://huangguolong1314.github.io/tags/%E5%8D%9A%E5%AE%A2/"/>
