@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://huangguolong1314.github.io/"/>
-  <updated>2022-05-27T15:05:03.664Z</updated>
+  <updated>2023-07-18T12:06:38.503Z</updated>
   <id>https://huangguolong1314.github.io/</id>
   
   <author>
@@ -17,9 +17,38 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>入门-mysql学习笔记</title>
+    <link href="https://huangguolong1314.github.io/2023/07/18/mysql/%E5%85%A5%E9%97%A8-mysql%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B01/"/>
+    <id>https://huangguolong1314.github.io/2023/07/18/mysql/%E5%85%A5%E9%97%A8-mysql%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B01/</id>
+    <published>2023-07-18T12:00:00.000Z</published>
+    <updated>2023-07-18T12:06:38.503Z</updated>
+    
+    <content type="html"><![CDATA[<ol><li>mysql函数<ol><li>IFNULL：遇到空值运算给0补充，例如字段age为NULL，age<em>18=NULL，使用IFNULL后，则IFNULL(age,0)，变成age</em>0=0；</li><li>DISTINCT：去重（效率较低，底层实现原理会生成一张临时表）；</li><li>WHERE：过滤条件；</li><li>&lt;&gt;：不等于也可以是（!=）；</li><li>BETWEEN … AND … ：比较运算符包含边界（等价于AND），例如查询年龄18-20之间的数据：select * from emp where age between 18 and 20;</li><li>IN：等于值列表中任意一个即可，例如：where age in(18,20)；</li><li>LIKE：模糊查询，例如：where name LIKE ‘黄%’（向后匹配，如果向前匹配则把%放前面即可）；<ol><li>LIKE <em>：表示一个任意字符，如查询名字中第二个字带国字的数据（如需查询第几位则前面就用几个_代替，如需查询中间含有_的数据则需在下划线前增加一个转义字符即可，例如：’%\</em>%’，如果不想要\来做转义字符的话，则可通过关键字ESCAPE ‘$’来处理，例如：like ‘%$_%’ ESCAPE ‘$’ 即可），例如：select * from emp where name like ‘_国%’;</li></ol></li><li>ORDER BY … ASC：升序排序（不指定排序方式，默认为ASC升序排序）；</li><li>ORDER BY … DESC：降序排序；<ol><li>多列排序，select id,name,score from emp where age between 18 and 30 order by age desc,name,score desc （查询emp表中年龄在18岁到30岁之间的数据，并根据age进行降序排序，如果有重复的则根据name进行升序排序，还有重复的则根据score进行倒序排序）；</li></ol></li><li>INNER JOIN：内连接（只查询满足连接条件的数据）；</li><li>外连接<ol><li>LEFT JOIN（左外连接）：不仅将多个表中满足条件的数据查出，还将”左表“中不满足条件的数据也查出；</li><li>RIGHT JOIN（左外连接）：不仅将多个表中满足条件的数据查出，还将”右表“中不满足条件的数据也查出；</li><li>UNION JOIN（满外连接）：不仅将多个表中满足条件的数据查出，还将”多个表“中不满足条件的数据也查出；</li></ol></li><li>CONCAT()：字符串拼接，例如：select CONCAT(name,’works for’, name)每个字符串用”,”隔开利用CONCAT函数把所有字符串都拼接起来；</li><li>自连接<ol><li>CONCAT函数（拼接一个或多个字符串）：例如：select CONCAT(last_name, ‘works for ‘, last_name)，利用CONCAT函数把所有的字符串串接到一起形成一列（跟编程语言中的字符串拼接类似）。</li><li>自连接的技巧就是，把同一张表看做成两张不同的表进行连接查询。</li></ol></li><li>等值连接<ol><li>例如：select e.id,e.city from emp e, demp d where e.id=d.id（等值连接就是查询连接的条件值是相等的或等于等于的）；</li></ol></li><li>非等值连接<ol><li>例如：select e.id,e.city from emp e, demp d where e.id BETWEEN d.lowset_sal AND d.highest_sal （非等值连接就是查询的连接条件是不相等的，比如上面例子就是查询的条件是取的范围值没有直接的等于等于的情况就是非等值连接）</li></ol></li><li>条件表达式<ol><li>CASE … THEN …：例如：select emp_ID, last_name,salary,depa_id, CASE depa_id WHEN 10 THEN salary *1.1  WHEN 20 THEN salary * 1.2 END “new_salary” from employ;（查询emp_ID，last_name，depa_id，salary，使用CASE关键字来判断，如果depa_id=10的话，那么salary * 1.1，在如果depa_id=20的话那么salary * 1.2注意条件结束时需要加上关键字END来结束这个表达式，如果都不等于10或者20的话则使用ELSE关键字，类似于if …else …）</li></ol></li><li>分组函数、多行行数（MAX-最大，MIN-最小，AVG（平均），COUNT-总数，SUM（总和））</li><li>子查询解决组函数嵌套的问题<ol><li>例如：select MAX(avg_sal) from (select AVG(salary) avg_sal from emp GROUP BY demp_id) e; 把子查询查出来的结果看作为一张零时的表或列，然后再外层通过MAX函数查出最大值；</li><li>例如：查询出谁的工资比Abel工资高：select emp_id, last_name,salary from emp where salary &gt; (select salary from emp where last_name=‘Abel’)，解释：先利用子查询查询出Abel的工资，然后在用外层查询比Abel工资高的人即可；</li></ol></li><li>MySQL的语句的执行顺序： SELECT-6、FROM-1（会先将表加载到内存中）、JOIN ON-2（表之间的连接条件，将满足条件的数据都加载到内存中，然后再对内存中的表中的数据进行过滤满足条件留下，不满足条件的则过滤掉）、WHERE-3（对内存中的表进行过滤）、GROUP BY-4（分组效率最低-底层是需要生成临时表的，通常情况下过滤条件能写在where后面就尽量写在where后面，通过where过滤掉部分数据后再进行分组，注意：出现在SELECT子句后的非分组函数，必须出现在GROUP BY子句后）、HAVING-5、ORDER BY-7（将select查询出来的数据最后在通过order by进行排序）；</li><li>使用ANY关键字（多行操作符，满足值列表中任意一个条件即可，有点类似或者…或者..的意思）来进行多行子查询，例如：select emp_id, last_name,job_id,salary from emp where salary &lt; ANY (select salary from emp where job_id=‘IT_PROG’)；题目解析：返回其它部门中比job_id为IT_PROG部门任一工资低的员工的员工号、姓名、job_id以及salary；</li><li>使用ALL关键字（多行操作符，满足值列表中所有的条件才可以，有点类似并且…并且…的意思）来进行多行子查询，例如：select emp_id, last_name,job_id,salary from emp where salary &lt; ALL (select salary from emp where job_id=‘IT_PROG’)；题目解析：返回其它部门中比job_id为IT_PROG部门所有工资都低的员工的员工号、姓名、job_id以及salary；</li></ol></li></ol>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;ol&gt;
+&lt;li&gt;mysql函数&lt;ol&gt;
+&lt;li&gt;IFNULL：遇到空值运算给0补充，例如字段age为NULL，age&lt;em&gt;18=NULL，使用IFNULL后，则IFNULL(age,0)，变成age&lt;/em&gt;0=0；&lt;/li&gt;
+&lt;li&gt;DISTINCT：去重（效率较低，底层实
+      
+    
+    </summary>
+    
+    
+      <category term="hexo" scheme="https://huangguolong1314.github.io/categories/hexo/"/>
+    
+    
+      <category term="博客" scheme="https://huangguolong1314.github.io/tags/%E5%8D%9A%E5%AE%A2/"/>
+    
+  </entry>
+  
+  <entry>
     <title>linux命令总结</title>
-    <link href="https://huangguolong1314.github.io/2022/05/16/linux%E5%91%BD%E4%BB%A4%E6%80%BB%E7%BB%93/"/>
-    <id>https://huangguolong1314.github.io/2022/05/16/linux%E5%91%BD%E4%BB%A4%E6%80%BB%E7%BB%93/</id>
+    <link href="https://huangguolong1314.github.io/2022/05/16/linux/linux%E5%91%BD%E4%BB%A4%E6%80%BB%E7%BB%93/"/>
+    <id>https://huangguolong1314.github.io/2022/05/16/linux/linux%E5%91%BD%E4%BB%A4%E6%80%BB%E7%BB%93/</id>
     <published>2022-05-16T13:50:00.000Z</published>
     <updated>2022-05-27T15:05:03.664Z</updated>
     
@@ -44,8 +73,8 @@
   
   <entry>
     <title>MySql学习 —— 子查询(where、from、exists) 及 连接查询(left join、right join、inner join、union join)</title>
-    <link href="https://huangguolong1314.github.io/2022/02/09/mySql%E5%AD%A6%E4%B9%A0/"/>
-    <id>https://huangguolong1314.github.io/2022/02/09/mySql%E5%AD%A6%E4%B9%A0/</id>
+    <link href="https://huangguolong1314.github.io/2022/02/09/mysql/%E5%85%A5%E9%97%A8-mysql%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B02/"/>
+    <id>https://huangguolong1314.github.io/2022/02/09/mysql/%E5%85%A5%E9%97%A8-mysql%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B02/</id>
     <published>2022-02-09T07:30:00.000Z</published>
     <updated>2022-02-10T08:58:50.032Z</updated>
     
@@ -73,8 +102,8 @@
   
   <entry>
     <title>nginx详解</title>
-    <link href="https://huangguolong1314.github.io/2021/06/21/%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0%E6%90%9E%E5%AE%9Anginx%E9%85%8D%E7%BD%AE/"/>
-    <id>https://huangguolong1314.github.io/2021/06/21/%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0%E6%90%9E%E5%AE%9Anginx%E9%85%8D%E7%BD%AE/</id>
+    <link href="https://huangguolong1314.github.io/2021/06/21/nginx/%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0%E6%90%9E%E5%AE%9Anginx%E9%85%8D%E7%BD%AE/"/>
+    <id>https://huangguolong1314.github.io/2021/06/21/nginx/%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0%E6%90%9E%E5%AE%9Anginx%E9%85%8D%E7%BD%AE/</id>
     <published>2021-06-21T07:51:00.000Z</published>
     <updated>2022-02-10T09:01:49.574Z</updated>
     
@@ -104,8 +133,8 @@
   
   <entry>
     <title>docker-compose搭建MySQL主从复制集群</title>
-    <link href="https://huangguolong1314.github.io/2020/09/02/docker-compose%E6%90%AD%E5%BB%BAMySQL%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%E9%9B%86%E7%BE%A4/"/>
-    <id>https://huangguolong1314.github.io/2020/09/02/docker-compose%E6%90%AD%E5%BB%BAMySQL%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%E9%9B%86%E7%BE%A4/</id>
+    <link href="https://huangguolong1314.github.io/2020/09/02/docker/docker-compose%E6%90%AD%E5%BB%BAMySQL%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%E9%9B%86%E7%BE%A4/"/>
+    <id>https://huangguolong1314.github.io/2020/09/02/docker/docker-compose%E6%90%AD%E5%BB%BAMySQL%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%E9%9B%86%E7%BE%A4/</id>
     <published>2020-09-02T04:00:00.000Z</published>
     <updated>2021-09-11T02:34:00.450Z</updated>
     
@@ -130,8 +159,8 @@
   
   <entry>
     <title>一个故事讲完https</title>
-    <link href="https://huangguolong1314.github.io/2020/08/08/%E4%B8%80%E4%B8%AA%E6%95%85%E4%BA%8B%E8%AE%B2%E5%AE%8Chttps/"/>
-    <id>https://huangguolong1314.github.io/2020/08/08/%E4%B8%80%E4%B8%AA%E6%95%85%E4%BA%8B%E8%AE%B2%E5%AE%8Chttps/</id>
+    <link href="https://huangguolong1314.github.io/2020/08/08/https/%E4%B8%80%E4%B8%AA%E6%95%85%E4%BA%8B%E8%AE%B2%E5%AE%8Chttps/"/>
+    <id>https://huangguolong1314.github.io/2020/08/08/https/%E4%B8%80%E4%B8%AA%E6%95%85%E4%BA%8B%E8%AE%B2%E5%AE%8Chttps/</id>
     <published>2020-08-08T04:00:00.000Z</published>
     <updated>2021-09-11T02:34:00.450Z</updated>
     
@@ -155,35 +184,9 @@
   </entry>
   
   <entry>
-    <title>git详解</title>
-    <link href="https://huangguolong1314.github.io/2020/07/24/git%E8%AF%A6%E8%A7%A3/"/>
-    <id>https://huangguolong1314.github.io/2020/07/24/git%E8%AF%A6%E8%A7%A3/</id>
-    <published>2020-07-24T04:00:00.000Z</published>
-    <updated>2021-09-11T02:34:00.450Z</updated>
-    
-    <content type="html"><![CDATA[<h1 id="1-Git是什么（what）"><a href="#1-Git是什么（what）" class="headerlink" title="1. Git是什么（what）"></a>1. Git是什么（what）</h1><h2 id="（-）概述"><a href="#（-）概述" class="headerlink" title="（-）概述"></a>（-）概述</h2><p>Git是分布式版本控制系统，与SVN类似的集中化版本控制系统相比，集中化版本控制系统如果中央服务器宕机则会影响数据和协同开发。</p><p>Git是分布式的版本控制系统，客户端不只是提取最新版本的快照，而且将整个代码仓库镜像复制下来。如果任何协同工作用的服务器发生故障了，也可以用任何一个代码仓库来恢复。而且在协作服务器宕机期间，你也可以提交代码到本地仓库，当协作服务器正常工作后，你再将本地仓库同步到远程仓库。</p><h2 id="（二）特性"><a href="#（二）特性" class="headerlink" title="（二）特性"></a>（二）特性</h2><ul><li>能够对文件版本控制和多人协作开发</li><li>拥有强大的分支特性，所以能够灵活地以不同的工作流协同开发</li><li>分布式版本控制系统，即使协作服务器宕机，也能继续提交代码或文件到本地仓库，当协作服务器恢复正常工作时，再将本地仓库同步到远程仓库。</li><li>当团队中某个成员完成某个功能时，通过<code>pull request</code>操作来通知其他团队成员，其他团队成员能够<code>review code</code>后再合并代码。</li></ul><h1 id="2-为什么要用Git（why）"><a href="#2-为什么要用Git（why）" class="headerlink" title="2. 为什么要用Git（why）"></a>2. 为什么要用Git（why）</h1><ul><li>能够对文件版本控制和多人协作开发</li><li>拥有强大的分支特性，所以能够灵活地以不同的工作流协同开发</li><li>分布式版本控制系统，即使协作服务器宕机，也能继续提交代码或文件到本地仓库，当协作服务器恢复正常工作时，再将本地仓库同步到远程仓库。</li><li>当团队中某个成员完成某个功能时，通过pull request操作来通知其他团队成员，其他团队成员能够review code后再合并代码。</li></ul><h1 id="3-如何使用Git（how）"><a href="#3-如何使用Git（how）" class="headerlink" title="3. 如何使用Git（how）"></a>3. 如何使用Git（how）</h1><h2 id="（-）Git的命令"><a href="#（-）Git的命令" class="headerlink" title="（-）Git的命令"></a>（-）Git的命令</h2><p><img src= "/img/loading.gifs" data-src="/images/git/git2.png" alt=""></p><ul><li>Workspace：工作区</li><li>Index / Stage：暂存区</li><li>Repository：仓库区（或本地仓库）</li><li>Remote：远程仓库</li></ul><h3 id="3-1-新建代码库"><a href="#3-1-新建代码库" class="headerlink" title="3.1 新建代码库"></a>3.1 新建代码库</h3><p>#在当前目录新建一个Git代码库<br><code>git init</code><br>#新建一个目录，将其初始化为Git代码库<br><code>git init [project-name]</code><br>#下载一个项目和它的整个代码历史<br><code>git clone [url]</code></p><h3 id="3-2-配置"><a href="#3-2-配置" class="headerlink" title="3.2 配置"></a>3.2 配置</h3><p>Git的设置文件为.gitconfig，它可以在用户主目录行哦啊（全局配置），也可以在项目目录下（项目配置）。</p><p>#显示当前的Git配置<br><code>git config --list</code><br>#编辑Git配置文件<br><code>git config -e [--global]</code><br>#设置提交代码时的用户信息<br><code>git config [--global] user.name &quot;[name]&quot;</code><br><code>git config [--global] user.email &quot;[email address]&quot;</code></p><h3 id="3-3-增加-删除文件"><a href="#3-3-增加-删除文件" class="headerlink" title="3.3 增加/删除文件"></a>3.3 增加/删除文件</h3><p>#添加指定文件到暂存区<br><code>git add [file1] [file2] ...</code><br>#添加指定目录到暂存区，包括子目录<br><code>git add [dir]</code><br>#添加当前目录的所有文件到暂存区<br><code>git add .</code><br>#添加每个变化前，都会要求确认<br>#对于同一个文件的多处变化，可以实现分次提交<br><code>git add -p</code><br>#删除工作区文件，并且将这次删除放入暂存区<br><code>git rm [file1] [file2] ...</code><br>#停止追踪指定文件，但该文件会保留在工作区<br><code>git rm --cached [file]</code><br>#改名文件，并且将这个改名放入暂存区<br><code>git mv [file-original] [file-renamed]</code></p><h3 id="3-4-代码提交"><a href="#3-4-代码提交" class="headerlink" title="3.4 代码提交"></a>3.4 代码提交</h3><p>#提交暂存区到仓库区<br><code>git commit -m [message]</code><br>#提交暂存区的指定文件到仓库区<br><code>git commit [file1] [file2] ... -m [message]</code><br>#提交工作区自上次commit之后的变化，直接到仓库区<br><code>git commit -a</code><br>#提交时显示所有diff信息<br><code>git commit -v</code><br>#使用一次新的commit，替代上一次提交<br>#如果代码没有任何新变化，则用来改写上一次commit的提交信息<br><code>git commit --amend -m [message]</code><br>#重做上一次commit，并包括指定文件的新变化<br><code>git commit --amend [file1] [file2] ...</code></p><h3 id="3-5-分支"><a href="#3-5-分支" class="headerlink" title="3.5 分支"></a>3.5 分支</h3><p>#列出所有本地分支<br><code>git branch</code><br>#列出所有本地分支<br><code>git branch -a</code><br>#新建一个分支，但依然停留在当前分支<br><code>git branch [branch-name]</code><br>#新建一个分支，并切换到该分支<br><code>git checkout -b [branch]</code><br>#新建一个分支，指向指定commit<br><code>git branch [branch] [commit]</code><br>#新建一个分支，与指定的远程分支建立追踪关系<br><code>git branch --track [branch] [remote-branch]</code><br>#切换到指定分支，并更新工作区<br><code>git checkout [branch-name]</code><br>#切换到上一个分支<br><code>git checkout -</code><br>#建立追踪关系，在现有分支与指定的远程分支之间<br><code>git branch --set-upstream [branch] [remote-branch]</code><br>#合并指定分支到当前分支<br><code>git merge [branch]</code><br>#选择一个commit，合并进当前分支<br><code>git cherry-pick [commit]</code><br>#删除分支<br><code>git push origin --delete [branch-name]</code><br><code>git branch -dr [remote/branch]</code></p><h3 id="3-6-标签"><a href="#3-6-标签" class="headerlink" title="3.6 标签"></a>3.6 标签</h3><p>#列出所有tag<br><code>git tag</code><br>#新建一个tag在当前commit<br><code>git tag [tag]</code><br>#新建一个tag在指定commit<br><code>git tag [tag] [commit]</code><br>#删除本地tag<br><code>git tag -d [tag]</code><br>#删除远程tag<br><code>git push origin :refs/tags/[tagName]</code><br>#查看tag信息<br><code>git show [tag]</code><br>#提交指定tag<br><code>git push [remote] [tag]</code><br>#提交所有tag<br><code>git push [remote] --tags</code><br>#新建一个分支，指向某个tag<br><code>git checkout -b [branch] [tag]</code></p><h3 id="3-7-查看信息"><a href="#3-7-查看信息" class="headerlink" title="3.7 查看信息"></a>3.7 查看信息</h3><p>#列出所有tag<br><code>git tag</code><br>#新建一个tag在当前commit<br><code>git tag [tag]</code><br>#新建一个tag在指定commit<br><code>git tag [tag] [commit]</code><br>#删除本地tag<br><code>git tag -d [tag]</code><br>#删除远程tag<br><code>git push origin :refs/tags/[tagName]</code><br>#查看tag信息<br><code>git show [tag]</code><br>#提交指定tag<br><code>git push [remote] [tag]</code><br>#提交所有tag<br><code>git push [remote] --tags</code><br>#新建一个分支，指向某个tag<br><code>git checkout -b [branch] [tag]</code></p><h3 id="3-8-远程同步"><a href="#3-8-远程同步" class="headerlink" title="3.8 远程同步"></a>3.8 远程同步</h3><p>#下载远程仓库的所有变动<br><code>git fetch [remote]</code><br>#显示所有远程仓库<br><code>git remote -v</code><br>#显示某个远程仓库的信息<br><code>git remote show [remote]</code><br>#增加一个新的远程仓库，并命名<br><code>git remote add [shortname] [url]</code><br>#取回远程仓库的变化，并与本地分支合并<br><code>git pull [remote] [branch]</code><br>#上传本地指定分支到远程仓库<br><code>git push [remote] [branch]</code><br>#强行推送当前分支到远程仓库，即使有冲突<br><code>git push [remote] --force</code><br>#推送所有分支到远程仓库<br><code>git push [remote] --all</code></p><h3 id="3-9-撤销"><a href="#3-9-撤销" class="headerlink" title="3.9 撤销"></a>3.9 撤销</h3><p>#恢复暂存区的指定文件到工作区<br><code>git checkout [file]</code><br>#恢复某个commit的指定文件到暂存区和工作区<br><code>git checkout [commit] [file]</code><br>#恢复暂存区的所有文件到工作区<br><code>git checkout .</code><br>#重置暂存区的指定文件，与上一次commit保持一致，但工作区不变<br><code>git reset [file]</code><br>#重置暂存区与工作区，与上一次commit保持一致<br><code>git reset --hard</code><br>#重置当前分支的指针为指定commit，同时重置暂存区，但工作区不变<br><code>git reset [commit]</code><br>#重置当前分支的HEAD为指定commit，同时重置暂存区和工作区，与指定commit一致<br><code>git reset --hard [commit]</code><br>#重置当前HEAD为指定commit，但保持暂存区和工作区不变<br><code>git reset --keep [commit]</code><br>#新建一个commit，用来撤销指定commit<br>#后者的所有变化都将被前者抵消，并且应用到当前分支<br><code>git revert [commit]</code><br>#暂时将未提交的变化移除，稍后再移入<br><code>git stash</code><br><code>git stash pop</code></p><h3 id="3-10-其他"><a href="#3-10-其他" class="headerlink" title="3.10 其他"></a>3.10 其他</h3><p>#生成一个可供发布的压缩包<br><code>git archive</code><br>#设置换行符为LF<br><code>git config --global core.autocrlf false</code><br>#拒绝提交包含混合换行符的文件<br><code>git config --global core.safecrlf true</code></p><h1 id="4-Git命令思维导图"><a href="#4-Git命令思维导图" class="headerlink" title="4. Git命令思维导图"></a>4. Git命令思维导图</h1><p><img src= "/img/loading.gifs" data-src="/images/git/git3.png" alt=""></p>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;h1 id=&quot;1-Git是什么（what）&quot;&gt;&lt;a href=&quot;#1-Git是什么（what）&quot; class=&quot;headerlink&quot; title=&quot;1. Git是什么（what）&quot;&gt;&lt;/a&gt;1. Git是什么（what）&lt;/h1&gt;&lt;h2 id=&quot;（-）概述&quot;&gt;&lt;a href=
-      
-    
-    </summary>
-    
-    
-      <category term="git详解" scheme="https://huangguolong1314.github.io/categories/git%E8%AF%A6%E8%A7%A3/"/>
-    
-    
-      <category term="git" scheme="https://huangguolong1314.github.io/tags/git/"/>
-    
-  </entry>
-  
-  <entry>
     <title>解决hexo博客文章太长导致的显示不全的问题</title>
-    <link href="https://huangguolong1314.github.io/2020/07/24/%E8%A7%A3%E5%86%B3hexo%E5%8D%9A%E5%AE%A2%E6%96%87%E7%AB%A0%E5%A4%AA%E9%95%BF%E5%AF%BC%E8%87%B4%E7%9A%84%E6%98%BE%E7%A4%BA%E4%B8%8D%E5%85%A8%E9%97%AE%E9%A2%98/"/>
-    <id>https://huangguolong1314.github.io/2020/07/24/%E8%A7%A3%E5%86%B3hexo%E5%8D%9A%E5%AE%A2%E6%96%87%E7%AB%A0%E5%A4%AA%E9%95%BF%E5%AF%BC%E8%87%B4%E7%9A%84%E6%98%BE%E7%A4%BA%E4%B8%8D%E5%85%A8%E9%97%AE%E9%A2%98/</id>
+    <link href="https://huangguolong1314.github.io/2020/07/24/blog/%E8%A7%A3%E5%86%B3hexo%E5%8D%9A%E5%AE%A2%E6%96%87%E7%AB%A0%E5%A4%AA%E9%95%BF%E5%AF%BC%E8%87%B4%E7%9A%84%E6%98%BE%E7%A4%BA%E4%B8%8D%E5%85%A8%E9%97%AE%E9%A2%98/"/>
+    <id>https://huangguolong1314.github.io/2020/07/24/blog/%E8%A7%A3%E5%86%B3hexo%E5%8D%9A%E5%AE%A2%E6%96%87%E7%AB%A0%E5%A4%AA%E9%95%BF%E5%AF%BC%E8%87%B4%E7%9A%84%E6%98%BE%E7%A4%BA%E4%B8%8D%E5%85%A8%E9%97%AE%E9%A2%98/</id>
     <published>2020-07-24T04:00:00.000Z</published>
     <updated>2021-09-11T02:34:00.451Z</updated>
     
@@ -207,9 +210,35 @@
   </entry>
   
   <entry>
+    <title>git详解</title>
+    <link href="https://huangguolong1314.github.io/2020/07/24/git/git%E8%AF%A6%E8%A7%A3/"/>
+    <id>https://huangguolong1314.github.io/2020/07/24/git/git%E8%AF%A6%E8%A7%A3/</id>
+    <published>2020-07-24T04:00:00.000Z</published>
+    <updated>2021-09-11T02:34:00.450Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="1-Git是什么（what）"><a href="#1-Git是什么（what）" class="headerlink" title="1. Git是什么（what）"></a>1. Git是什么（what）</h1><h2 id="（-）概述"><a href="#（-）概述" class="headerlink" title="（-）概述"></a>（-）概述</h2><p>Git是分布式版本控制系统，与SVN类似的集中化版本控制系统相比，集中化版本控制系统如果中央服务器宕机则会影响数据和协同开发。</p><p>Git是分布式的版本控制系统，客户端不只是提取最新版本的快照，而且将整个代码仓库镜像复制下来。如果任何协同工作用的服务器发生故障了，也可以用任何一个代码仓库来恢复。而且在协作服务器宕机期间，你也可以提交代码到本地仓库，当协作服务器正常工作后，你再将本地仓库同步到远程仓库。</p><h2 id="（二）特性"><a href="#（二）特性" class="headerlink" title="（二）特性"></a>（二）特性</h2><ul><li>能够对文件版本控制和多人协作开发</li><li>拥有强大的分支特性，所以能够灵活地以不同的工作流协同开发</li><li>分布式版本控制系统，即使协作服务器宕机，也能继续提交代码或文件到本地仓库，当协作服务器恢复正常工作时，再将本地仓库同步到远程仓库。</li><li>当团队中某个成员完成某个功能时，通过<code>pull request</code>操作来通知其他团队成员，其他团队成员能够<code>review code</code>后再合并代码。</li></ul><h1 id="2-为什么要用Git（why）"><a href="#2-为什么要用Git（why）" class="headerlink" title="2. 为什么要用Git（why）"></a>2. 为什么要用Git（why）</h1><ul><li>能够对文件版本控制和多人协作开发</li><li>拥有强大的分支特性，所以能够灵活地以不同的工作流协同开发</li><li>分布式版本控制系统，即使协作服务器宕机，也能继续提交代码或文件到本地仓库，当协作服务器恢复正常工作时，再将本地仓库同步到远程仓库。</li><li>当团队中某个成员完成某个功能时，通过pull request操作来通知其他团队成员，其他团队成员能够review code后再合并代码。</li></ul><h1 id="3-如何使用Git（how）"><a href="#3-如何使用Git（how）" class="headerlink" title="3. 如何使用Git（how）"></a>3. 如何使用Git（how）</h1><h2 id="（-）Git的命令"><a href="#（-）Git的命令" class="headerlink" title="（-）Git的命令"></a>（-）Git的命令</h2><p><img src= "/img/loading.gifs" data-src="/images/git/git2.png" alt=""></p><ul><li>Workspace：工作区</li><li>Index / Stage：暂存区</li><li>Repository：仓库区（或本地仓库）</li><li>Remote：远程仓库</li></ul><h3 id="3-1-新建代码库"><a href="#3-1-新建代码库" class="headerlink" title="3.1 新建代码库"></a>3.1 新建代码库</h3><p>#在当前目录新建一个Git代码库<br><code>git init</code><br>#新建一个目录，将其初始化为Git代码库<br><code>git init [project-name]</code><br>#下载一个项目和它的整个代码历史<br><code>git clone [url]</code></p><h3 id="3-2-配置"><a href="#3-2-配置" class="headerlink" title="3.2 配置"></a>3.2 配置</h3><p>Git的设置文件为.gitconfig，它可以在用户主目录行哦啊（全局配置），也可以在项目目录下（项目配置）。</p><p>#显示当前的Git配置<br><code>git config --list</code><br>#编辑Git配置文件<br><code>git config -e [--global]</code><br>#设置提交代码时的用户信息<br><code>git config [--global] user.name &quot;[name]&quot;</code><br><code>git config [--global] user.email &quot;[email address]&quot;</code></p><h3 id="3-3-增加-删除文件"><a href="#3-3-增加-删除文件" class="headerlink" title="3.3 增加/删除文件"></a>3.3 增加/删除文件</h3><p>#添加指定文件到暂存区<br><code>git add [file1] [file2] ...</code><br>#添加指定目录到暂存区，包括子目录<br><code>git add [dir]</code><br>#添加当前目录的所有文件到暂存区<br><code>git add .</code><br>#添加每个变化前，都会要求确认<br>#对于同一个文件的多处变化，可以实现分次提交<br><code>git add -p</code><br>#删除工作区文件，并且将这次删除放入暂存区<br><code>git rm [file1] [file2] ...</code><br>#停止追踪指定文件，但该文件会保留在工作区<br><code>git rm --cached [file]</code><br>#改名文件，并且将这个改名放入暂存区<br><code>git mv [file-original] [file-renamed]</code></p><h3 id="3-4-代码提交"><a href="#3-4-代码提交" class="headerlink" title="3.4 代码提交"></a>3.4 代码提交</h3><p>#提交暂存区到仓库区<br><code>git commit -m [message]</code><br>#提交暂存区的指定文件到仓库区<br><code>git commit [file1] [file2] ... -m [message]</code><br>#提交工作区自上次commit之后的变化，直接到仓库区<br><code>git commit -a</code><br>#提交时显示所有diff信息<br><code>git commit -v</code><br>#使用一次新的commit，替代上一次提交<br>#如果代码没有任何新变化，则用来改写上一次commit的提交信息<br><code>git commit --amend -m [message]</code><br>#重做上一次commit，并包括指定文件的新变化<br><code>git commit --amend [file1] [file2] ...</code></p><h3 id="3-5-分支"><a href="#3-5-分支" class="headerlink" title="3.5 分支"></a>3.5 分支</h3><p>#列出所有本地分支<br><code>git branch</code><br>#列出所有本地分支<br><code>git branch -a</code><br>#新建一个分支，但依然停留在当前分支<br><code>git branch [branch-name]</code><br>#新建一个分支，并切换到该分支<br><code>git checkout -b [branch]</code><br>#新建一个分支，指向指定commit<br><code>git branch [branch] [commit]</code><br>#新建一个分支，与指定的远程分支建立追踪关系<br><code>git branch --track [branch] [remote-branch]</code><br>#切换到指定分支，并更新工作区<br><code>git checkout [branch-name]</code><br>#切换到上一个分支<br><code>git checkout -</code><br>#建立追踪关系，在现有分支与指定的远程分支之间<br><code>git branch --set-upstream [branch] [remote-branch]</code><br>#合并指定分支到当前分支<br><code>git merge [branch]</code><br>#选择一个commit，合并进当前分支<br><code>git cherry-pick [commit]</code><br>#删除分支<br><code>git push origin --delete [branch-name]</code><br><code>git branch -dr [remote/branch]</code></p><h3 id="3-6-标签"><a href="#3-6-标签" class="headerlink" title="3.6 标签"></a>3.6 标签</h3><p>#列出所有tag<br><code>git tag</code><br>#新建一个tag在当前commit<br><code>git tag [tag]</code><br>#新建一个tag在指定commit<br><code>git tag [tag] [commit]</code><br>#删除本地tag<br><code>git tag -d [tag]</code><br>#删除远程tag<br><code>git push origin :refs/tags/[tagName]</code><br>#查看tag信息<br><code>git show [tag]</code><br>#提交指定tag<br><code>git push [remote] [tag]</code><br>#提交所有tag<br><code>git push [remote] --tags</code><br>#新建一个分支，指向某个tag<br><code>git checkout -b [branch] [tag]</code></p><h3 id="3-7-查看信息"><a href="#3-7-查看信息" class="headerlink" title="3.7 查看信息"></a>3.7 查看信息</h3><p>#列出所有tag<br><code>git tag</code><br>#新建一个tag在当前commit<br><code>git tag [tag]</code><br>#新建一个tag在指定commit<br><code>git tag [tag] [commit]</code><br>#删除本地tag<br><code>git tag -d [tag]</code><br>#删除远程tag<br><code>git push origin :refs/tags/[tagName]</code><br>#查看tag信息<br><code>git show [tag]</code><br>#提交指定tag<br><code>git push [remote] [tag]</code><br>#提交所有tag<br><code>git push [remote] --tags</code><br>#新建一个分支，指向某个tag<br><code>git checkout -b [branch] [tag]</code></p><h3 id="3-8-远程同步"><a href="#3-8-远程同步" class="headerlink" title="3.8 远程同步"></a>3.8 远程同步</h3><p>#下载远程仓库的所有变动<br><code>git fetch [remote]</code><br>#显示所有远程仓库<br><code>git remote -v</code><br>#显示某个远程仓库的信息<br><code>git remote show [remote]</code><br>#增加一个新的远程仓库，并命名<br><code>git remote add [shortname] [url]</code><br>#取回远程仓库的变化，并与本地分支合并<br><code>git pull [remote] [branch]</code><br>#上传本地指定分支到远程仓库<br><code>git push [remote] [branch]</code><br>#强行推送当前分支到远程仓库，即使有冲突<br><code>git push [remote] --force</code><br>#推送所有分支到远程仓库<br><code>git push [remote] --all</code></p><h3 id="3-9-撤销"><a href="#3-9-撤销" class="headerlink" title="3.9 撤销"></a>3.9 撤销</h3><p>#恢复暂存区的指定文件到工作区<br><code>git checkout [file]</code><br>#恢复某个commit的指定文件到暂存区和工作区<br><code>git checkout [commit] [file]</code><br>#恢复暂存区的所有文件到工作区<br><code>git checkout .</code><br>#重置暂存区的指定文件，与上一次commit保持一致，但工作区不变<br><code>git reset [file]</code><br>#重置暂存区与工作区，与上一次commit保持一致<br><code>git reset --hard</code><br>#重置当前分支的指针为指定commit，同时重置暂存区，但工作区不变<br><code>git reset [commit]</code><br>#重置当前分支的HEAD为指定commit，同时重置暂存区和工作区，与指定commit一致<br><code>git reset --hard [commit]</code><br>#重置当前HEAD为指定commit，但保持暂存区和工作区不变<br><code>git reset --keep [commit]</code><br>#新建一个commit，用来撤销指定commit<br>#后者的所有变化都将被前者抵消，并且应用到当前分支<br><code>git revert [commit]</code><br>#暂时将未提交的变化移除，稍后再移入<br><code>git stash</code><br><code>git stash pop</code></p><h3 id="3-10-其他"><a href="#3-10-其他" class="headerlink" title="3.10 其他"></a>3.10 其他</h3><p>#生成一个可供发布的压缩包<br><code>git archive</code><br>#设置换行符为LF<br><code>git config --global core.autocrlf false</code><br>#拒绝提交包含混合换行符的文件<br><code>git config --global core.safecrlf true</code></p><h1 id="4-Git命令思维导图"><a href="#4-Git命令思维导图" class="headerlink" title="4. Git命令思维导图"></a>4. Git命令思维导图</h1><p><img src= "/img/loading.gifs" data-src="/images/git/git3.png" alt=""></p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h1 id=&quot;1-Git是什么（what）&quot;&gt;&lt;a href=&quot;#1-Git是什么（what）&quot; class=&quot;headerlink&quot; title=&quot;1. Git是什么（what）&quot;&gt;&lt;/a&gt;1. Git是什么（what）&lt;/h1&gt;&lt;h2 id=&quot;（-）概述&quot;&gt;&lt;a href=
+      
+    
+    </summary>
+    
+    
+      <category term="git详解" scheme="https://huangguolong1314.github.io/categories/git%E8%AF%A6%E8%A7%A3/"/>
+    
+    
+      <category term="git" scheme="https://huangguolong1314.github.io/tags/git/"/>
+    
+  </entry>
+  
+  <entry>
     <title>hexo + github 快速搭建博客</title>
-    <link href="https://huangguolong1314.github.io/2020/07/01/hexo+github%E5%BF%AB%E9%80%9F%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2/"/>
-    <id>https://huangguolong1314.github.io/2020/07/01/hexo+github%E5%BF%AB%E9%80%9F%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2/</id>
+    <link href="https://huangguolong1314.github.io/2020/07/01/blog/hexo+github%E5%BF%AB%E9%80%9F%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2/"/>
+    <id>https://huangguolong1314.github.io/2020/07/01/blog/hexo+github%E5%BF%AB%E9%80%9F%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2/</id>
     <published>2020-07-01T09:20:00.000Z</published>
     <updated>2021-09-11T02:34:00.450Z</updated>
     
