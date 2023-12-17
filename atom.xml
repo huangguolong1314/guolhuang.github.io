@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://huangguolong1314.github.io/"/>
-  <updated>2023-07-18T12:37:04.829Z</updated>
+  <updated>2023-12-14T15:18:24.576Z</updated>
   <id>https://huangguolong1314.github.io/</id>
   
   <author>
@@ -15,6 +15,90 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Redis五大经典业务问题</title>
+    <link href="https://huangguolong1314.github.io/2023/12/14/redis/Redis%E4%BA%94%E5%A4%A7%E7%BB%8F%E5%85%B8%E4%B8%9A%E5%8A%A1%E9%97%AE%E9%A2%98/Redis%E4%BA%94%E5%A4%A7%E7%BB%8F%E5%85%B8%E4%B8%9A%E5%8A%A1%E9%97%AE%E9%A2%98/"/>
+    <id>https://huangguolong1314.github.io/2023/12/14/redis/Redis%E4%BA%94%E5%A4%A7%E7%BB%8F%E5%85%B8%E4%B8%9A%E5%8A%A1%E9%97%AE%E9%A2%98/Redis%E4%BA%94%E5%A4%A7%E7%BB%8F%E5%85%B8%E4%B8%9A%E5%8A%A1%E9%97%AE%E9%A2%98/</id>
+    <published>2023-12-14T14:30:00.000Z</published>
+    <updated>2023-12-14T15:18:24.576Z</updated>
+    
+    <content type="html"><![CDATA[<p><img src= "/img/loading.gifs" data-src="/images/redis/cover.png" alt=""></p><h1 id="缓存穿透"><a href="#缓存穿透" class="headerlink" title="缓存穿透"></a>缓存穿透</h1><p>缓存穿透是指当请求的数据既不在缓存中也不存在于数据库中时，请求会直接穿透缓存层，到达数据库层。这通常是由于恶意攻击或者程序错误造成的，比如攻击者故意请求不存在的大量数据，导致缓存不命中，所有的请求都会落到数据库上，从而可能对数据库造成巨大的压力，影响其性能甚至导致崩溃通常是<code>thread_running</code>飙高。<br>解决方法：</p><ol><li>布隆过滤器（Bloom Filter）：布隆过滤器是一种数据结构，可以用来检测一个元素是否在一个集合中。在请求到达缓存之前，先通过布隆过滤器进行检查，如果布隆过滤器判断数据不存在，则直接返回错误响应，避免对数据库的访问。</li><li>缓存空结果：当查询数据库后发现数据不存在时，可以将这个”空结果”也缓存起来，并设置一个较短的过期时间。这样当再次请求相同的数据时，可以直接从缓存中获取到”空结果”，避免对数据库的访问。需要注意的是，这种方法可能会导致缓存被大量无用的空结果填满，所以需要合理设置过期时间。</li><li>限制请求：对于异常频繁的访问行为，可以采取限流、封禁IP等手段进行限制。例如，可以对每个用户的访问频率、请求的速度等进行限制，超过限制则暂时封禁其请求。</li><li>接口鉴权：在接口层做好身份验证和参数校验，不允许非法请求或者格式不正确的请求访问数据库。</li><li>数据库建立合理索引：对于一些必须要访问数据库的场景，确保数据库有好的查询性能，可以通过建立合理的索引来提高查询效率。</li><li>二级缓存：使用本地缓存作为一级缓存，Redis作为二级缓存。当本地缓存不命中时再查询Redis，如果Redis也不命中，最后才去查询数据库。这样可以减少直接对Redis的查询请求，降低Redis的压力。</li><li>前端控制：在前端应用中加强校验，比如表单校验、输入内容的合法性检查等，避免发送无效请求到后端。</li></ol><h1 id="缓存雪崩"><a href="#缓存雪崩" class="headerlink" title="缓存雪崩"></a>缓存雪崩</h1><p>缓存雪崩是指在缓存系统中，由于大量缓存数据在同一时间过期，或者缓存服务宕机，导致所有的请求都直接落到数据库上，造成数据库瞬间承受巨大的访问压力，从而变得不稳定甚至崩溃的现象。这类似于雪崩一样，一旦发生就会导致连锁反应，导致整个系统的性能急剧下降。<br>解决方法：</p><ol><li>缓存数据的过期时间随机化：设置缓存数据的过期时间时，不要让大量的缓存数据在同一时间点过期。可以对过期时间加上一个随机值，使得缓存数据的过期时间分散开来，防止在同一时刻大面积缓存失效。</li><li>使用持久化：如果缓存服务支持持久化，比如Redis的RDB和AOF，要确保开启并合理配置这些功能。这样，即使缓存服务重启，也能从持久化的数据中恢复，减少缓存雪崩的风险。</li><li>设置热点数据永不过期：对于一些热点数据，可以设置为永不过期，或者采用手动更新缓存的策略，避免这些热点数据集体过期。</li><li>使用多级缓存策略：可以使用本地缓存（如Ehcache）和分布式缓存（如Redis）结合的多级缓存策略，即使分布式缓存不可用，本地缓存仍然可以提供服务，减少对数据库的直接压力。</li><li>提升缓存服务的高可用性：使用主从复制、哨兵机制、集群等高可用方案来确保缓存服务的稳定性。即便单个节点出现故障，也能快速切换到正常的节点，保障缓存服务不中断。</li><li>限流和熔断机制：在系统中实施限流和熔断机制，当流量或错误超过一定阈值时，暂时阻止部分请求，保护数据库和系统不被过载。</li><li>异步队列：当缓存失效后，可以将数据库的读取操作放入异步队列中，用异步处理的方式来缓解瞬时流量对数据库的冲击。</li></ol><h1 id="缓存击穿"><a href="#缓存击穿" class="headerlink" title="缓存击穿"></a>缓存击穿</h1><p>缓存击穿指的是缓存中没有但数据库中有的数据（一般是热点数据）在缓存失效的瞬间，同时有大量并发请求这个数据点，这些请求会直接穿透缓存，全部落到数据库上，造成数据库短时间内的高压力。这与缓存穿透不同，缓存穿透是查询不存在的数据，而缓存击穿则是查询存在但是缓存刚好失效的数据。<br>解决方法：</p><ol><li>使用互斥锁：对于同一个数据点，在缓存失效时，通过加锁或同步机制，保证不管有多少并发请求，只允许一个请求去数据库查询数据，并更新缓存，其他请求等待缓存被更新后直接从缓存中获取数据。常见的做法是使用分布式锁。</li><li>设置热点数据永不过期：对于一些访问频率非常高的热点数据，可以设置缓存永不过期，或者缓存失效后由后台维护线程负责更新，而不是由用户请求触发更新。</li><li>使用双缓存机制（Cache Aside pattern）：当缓存失效时，并不立即删除缓存，而是使用另一个缓存进行更新操作。在新缓存更新完成之前，所有的读请求仍然访问的是旧的缓存。更新完成后再进行切换。</li><li>提前更新缓存：对于即将到期的数据，可以通过定时任务来检测并更新它。当检测到缓存数据即将到期时，可以提前异步地更新缓存。</li><li>给缓存设置合理的过期时间：对于一些热点数据，根据业务场景设置合理的过期时间，避免大量并发请求在同一时刻击穿缓存。</li><li>分布式缓存+本地缓存：可以在本地实现一层缓存，以减少对分布式缓存服务的访问频率，即使分布式缓存服务的数据过期，本地缓存仍然可以提供服务。</li><li>读写分离和负载均衡：数据库使用读写分离架构和负载均衡策略，将读操作分散到多个从库，减少对主库的直接压力。</li></ol><h1 id="数据不一致"><a href="#数据不一致" class="headerlink" title="数据不一致"></a>数据不一致</h1><p>缓存和数据库数据不一致的问题通常是由于缓存层与数据库层之间的数据同步策略不当导致的。这可能发生在以下几种情况：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">1. 写操作没有同时更新缓存与数据库。</span><br><span class="line">2. 缓存过期或被删除，而数据库中的数据在此期间被修改。</span><br><span class="line">3. 分布式系统中由于网络延迟或其他问题导致的数据同步延迟。</span><br><span class="line">4. 数据库事务回滚，但缓存更新已经发生。</span><br></pre></td></tr></table></figure><p>这些问题可能导致用户获取到过时的数据，影响用户体验，并可能引发更严重的数据一致性问题。<br>解决方法：</p><ol><li>缓存更新策略：<br> 缓存延迟双删：更新数据库数据后，先删除缓存，然后延迟一小段时间再次删除缓存，以确保请求在这段时间内若读取了旧数据，也会再次删除缓存，从而读到最新数据。Write/Read Through Cache：利用缓存提供的写通(Writethrough)或读取通(Read through)策略，让缓存管理器负责数据的读写，确保数据的一致性。Write Behind Caching：更新操作首先在缓存中执行，然后异步批量更新到数据库，这种策略要考虑数据丢失的风险和数据一致性的问题</li><li>数据库触发器：使用数据库触发器在数据发生变化时自动更新缓存，确保数据一致性。</li><li>事务消息：通过使用支持事务的消息队列，将缓存操作和数据库操作放到同一个事务中，确保两者要么都成功，要么都失败。</li><li>最终一致性：接受在某个时间窗口内缓存与数据库中的数据不一致，但是通过后台异步进程定期校对并同步数据，保证最终一致性。</li><li>使用分布式缓存解决方案：选择支持一致性哈希、数据同步等特性的分布式缓存解决方案，如Redis Cluster，保证数据在多个节点之间的一致性。</li><li>版本号/时间戳校验：给数据库记录添加版本号或时间戳，缓存数据时一同缓存这个版本信息，每次读取缓存数据时都检查版本或时间戳是否相符，若不符则重新从数据库加载。</li><li>强制缓存过期：设置较短的缓存过期时间，确保数据定期从数据库中刷新。</li></ol><h1 id="数据并发竞争"><a href="#数据并发竞争" class="headerlink" title="数据并发竞争"></a>数据并发竞争</h1><p>数据并发竞争访问问题，通常指的是多个客户端或线程同时对同一数据进行读写操作时，由于没有妥善的并发控制措施导致数据出现不一致或者丢失的情况。这个问题在分布式系统和多用户系统中尤为常见，尤其是在使用像Redis这样的缓存系统时也会遇到。出现问题的场景：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">1. 计数器更新：比如用Redis计数器统计网站点击量，如果多个请求同时更新计数器，可能会因为读写操作不是原子性导致计数器丢失更新。</span><br><span class="line">2. 库存扣减：在电商场景中，多个用户同时下单扣减库存，可能会导致超卖。</span><br><span class="line">3. 分布式锁：多个进程需要对同一资源进行操作时，需要使用锁来保证同时只有一个操作可以执行。</span><br><span class="line">4. Session共享：在分布式部署的Web应用中，多个服务器上的并发请求需要共享Session信息，可能导致Session数据不一致。</span><br></pre></td></tr></table></figure><p>解决方法：</p><ol><li>使用事务：Redis事务可以通过MULTI和EXEC命令来确保一系列命令的原子性执行。</li><li>使用Lua脚本：Redis可以执行Lua脚本，Lua脚本在执行过程中会被当作一个整体执行，这保证了操作的原子性。</li><li>使用分布式锁：可以实现一个基于Redis的分布式锁来控制资源的并发访问。比如使用SETNX命令实现锁的获取和释放。</li><li>乐观锁/Optimistic Locking：使用WATCH命令监视一个或多个键，如果在执行事务前这些键没有被其他命令改变，事务才会被执行。</li><li>悲观锁/Pessimistic Locking：对于关键业务，可以选择先对数据加锁，在业务处理完成后再解锁，避免其他客户端的访问。</li><li>限流措施：通过限流算法如令牌桶、漏桶等，控制对某一资源的并发访问数，减少并发冲突。</li><li>消息队列：使用消息队列将并发请求串行化处理，确保对共享资源的访问是有序的。</li></ol>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;&lt;img src= &quot;/img/loading.gifs&quot; data-src=&quot;/images/redis/cover.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+&lt;h1 id=&quot;缓存穿透&quot;&gt;&lt;a href=&quot;#缓存穿透&quot; class=&quot;headerlink&quot; title=&quot;缓存穿透
+      
+    
+    </summary>
+    
+    
+      <category term="redis" scheme="https://huangguolong1314.github.io/categories/redis/"/>
+    
+    
+      <category term="博客" scheme="https://huangguolong1314.github.io/tags/%E5%8D%9A%E5%AE%A2/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>MySql实战进阶-1.一条SQL查询语句是如何执行的？</title>
+    <link href="https://huangguolong1314.github.io/2023/12/07/mysql/MySql%E5%AE%9E%E6%88%98%E8%BF%9B%E9%98%B6/1.%E4%B8%80%E6%9D%A1SQL%E6%9F%A5%E8%AF%A2%E8%AF%AD%E5%8F%A5%E6%98%AF%E5%A6%82%E4%BD%95%E6%89%A7%E8%A1%8C%E7%9A%84/"/>
+    <id>https://huangguolong1314.github.io/2023/12/07/mysql/MySql%E5%AE%9E%E6%88%98%E8%BF%9B%E9%98%B6/1.%E4%B8%80%E6%9D%A1SQL%E6%9F%A5%E8%AF%A2%E8%AF%AD%E5%8F%A5%E6%98%AF%E5%A6%82%E4%BD%95%E6%89%A7%E8%A1%8C%E7%9A%84/</id>
+    <published>2023-12-07T14:30:00.000Z</published>
+    <updated>2023-12-07T14:26:19.659Z</updated>
+    
+    <content type="html"><![CDATA[<p><img src= "/img/loading.gifs" data-src="/images/MySql_shizhan/1/1-1.png" alt=""></p><ol><li><p>查询缓存</p><ul><li>1.1 当MySql拿到一个查询请求后，会先到查询缓存看看，之前是不是执行过这条语句，之前执行过的语句及其结果可能会以key-value的形式被直接缓存在内存中。key是查询的语句，value是查询的结果，如果你的查询能够直接在这个缓存中找到key，那么这个value就会被直接返回给客户端，如果语句不在查询缓存中，就会继续后面的执行阶段，执行完成后，执行结果会被存入查询缓存中。如果命中查询缓存MySQL不需要执行后面的复杂操作就可以直接返回结果，这个效率会很高。<code>但是大多数情况下不建议使用查询缓存，因为查询缓存往往弊大于利。</code>，查询缓存的失效非常频繁，只要有对一个表的更新，这个表上所有的查询缓存都会被清空，因此很可能费劲的把结果存起来，还没使用就被一个更新全部清空了，对于更新压力大的数据库来说，查询缓存的命中率非常低，除非你的业务就是有一张静态表，很长时间才会更新一次，比如一个系统配置表，那这张表上的查询才适合使用查询缓存。好在MySQL也提供了这种<code>按需使用</code>的方式。你可以将参数<code>query_cache_type</code>设置成DEMAND，这样对于默认的SQL语句都不使用查询缓存。而对于你确定要使用查询缓存的语句，可以用<code>SQL_CACHE</code>显示指定，像下面这个语句一样：<code>SELECT * SQL_CACHE * FROM T WHERE ID =10;</code>，需要注意的是，MySQL 8.0版本直接将查询缓存的整块功能删掉了，也就是说8.0开始彻底没有这个功能了。</li></ul></li><li><p>分析器</p><ul><li>2.1 </li></ul></li></ol>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;&lt;img src= &quot;/img/loading.gifs&quot; data-src=&quot;/images/MySql_shizhan/1/1-1.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;查询缓存&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;1.1 当MySql拿到一个查询请求后，会先
+      
+    
+    </summary>
+    
+    
+      <category term="mysql" scheme="https://huangguolong1314.github.io/categories/mysql/"/>
+    
+    
+      <category term="博客" scheme="https://huangguolong1314.github.io/tags/%E5%8D%9A%E5%AE%A2/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>CAP理论&amp;BASE理论.</title>
+    <link href="https://huangguolong1314.github.io/2023/07/18/cap&amp;base/CAP%E7%90%86%E8%AE%BA&amp;BASE%E7%90%86%E8%AE%BA/"/>
+    <id>https://huangguolong1314.github.io/2023/07/18/cap&amp;base/CAP%E7%90%86%E8%AE%BA&amp;BASE%E7%90%86%E8%AE%BA/</id>
+    <published>2023-07-18T12:00:00.000Z</published>
+    <updated>2023-07-18T13:08:31.635Z</updated>
+    
+    <content type="html"><![CDATA[<ol><li><p><code>C（    Consistency）</code>一致性：意思是，写操作之后的读操作，必须返回该值，举例：某条数据记录是v0，用户向G1发起一个写操作，将其改为v1，接下来，用户的读操作就会得到v1，这就叫一致性。问题是，用户有可能向G2发起该操作，由于G2的值没有发生变化，因此返回的是v1，G1和G2读操作的结果不一致，这就不满足一致性了。<br><img src= "/img/loading.gifs" data-src="/images/cap&base/1.png" alt=""><br>为了让G2也能变为G1，就要在G1写操作的时候，让G1和G2发送一条消息，要求G2页改成v1，这样的话，用户向G2发起读操作，也能得到v1。</p></li><li><p><code>A（    Availability）</code>可用性：意思是只要收到用户的请求，服务器就必须给出回应，用户可以选择向G1或G2发起读操作，不管是哪台服务器，只要收到请求，就必须告诉用户，到底是v0还是v1，否则就不满足可用性。</p></li><li><p><code>P（    Partition tolerance）</code>分区容错：大多数分布式系统都分布在多个子网络，每个子网络就叫做一个区，分区容错的意思是，区间通信可能失败，比如一台服务器放在中国，另一台服务器放在美国，这就是两个区，它们之间可能无法通信，在系统设计的时候必须考虑到这种情况。<br><img src= "/img/loading.gifs" data-src="/images/cap&base/2.png" alt=""><br><code>C（Consistency）和A（Availability）</code>的矛盾：一致性和可用性，为什么不可能同时成立？因为可能通信失败（即出现分区容错）。如果保证G2的一致性，那么G1必须在写 操作时，锁定G2的读操作和鞋操作，只有数据同步后，才能重新开放读写，锁定期间G2不能读写，没有可用性。如果保证G2的可用性，那么势必不能锁定G2，所以一致性就不成立。综上所述，G2无法同时做到一致性和可用性，系统设计时只能选择一个目标，如果追求一致性，那么无法保证所有节点的可用性；如果追求所有节点的可用性，那就没法做到一致性。<br>在什么场合，可用性高于一致性？<br>举例来说，发布一张网页到CDN，多个服务器有这张网页的副本，后来发现一个错误，需要更新网页，这时只能每个服务器都更新一遍，一般来说，网页的更新不是特别强调一致性。短时期内，一些用户拿到老版本，另一些用户拿到新版本，问题不会特别大。当然所有人最终都会看到新版本。所以这个场合就是可用性高于一致性。</p></li></ol><p><code>Consistency（一致性-节点系统中所有可用的数据）</code>：在分布式环境下，一致性是指数据在多个副本之间能否保持一致的特性。在一致性的需求下，当一个系统在数据一致的状态下执行更新操作后，应该保证系统的数据仍然处于一致的状态；<br><code>Availability（可用性-每个请求会得到一个响应）</code>：可用性是指系统提供的服务必须一直处于可用的状态，对于用户的每一个操作请求总是能够在有限的时间内返回结果。这里的重点是“有限时间内”和“返回结果”；<br><code>Partition Tolerance（分区容错性-系统运作将不管可用性、分区、数据或通信的丢失）</code>：分区容错性约束了一个分布式系统具有如下特性：分布式系统在遇到任何网络分区故障的时候，仍然需要能够保证对外提供一致性和可用性的服务，除非是整个网络环境都发生了故障；</p><ol start="4"><li>BASE<br><code>Basically Available（基本可用）</code>：分布式系统在出现不可预知故障的时候，允许损失部分可用性；<br><code>Soft state（软状态）</code>：软状态也称为弱状态，和硬状态相对，是指允许系统中的数据存在中间状态，并认为该中间状态的存在不会影响系统的整体可用性，即允许系统在不通节点的数据副本之间进行数据同步的过程存在延时；<br><code>Eventually consistent（最终一致性）</code>：最终一致性强调的是系统中所有的数据副本，在经过一段时间的同步后，最终能够达到一个一致的状态。因此，最终一致性的本质是需要系统保证最终数据能够达到一致，而不需要实时保证系统数据的强一致性；</li></ol>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;ol&gt;
+&lt;li&gt;&lt;p&gt;&lt;code&gt;C（    Consistency）&lt;/code&gt;一致性：意思是，写操作之后的读操作，必须返回该值，举例：某条数据记录是v0，用户向G1发起一个写操作，将其改为v1，接下来，用户的读操作就会得到v1，这就叫一致性。问题是，用户有可能向G2发起该
+      
+    
+    </summary>
+    
+    
+      <category term="cap&amp;base" scheme="https://huangguolong1314.github.io/categories/cap-base/"/>
+    
+    
+      <category term="博客" scheme="https://huangguolong1314.github.io/tags/%E5%8D%9A%E5%AE%A2/"/>
+    
+  </entry>
   
   <entry>
     <title>数组与链表</title>
@@ -63,33 +147,6 @@
     
     
       <category term="data_struct" scheme="https://huangguolong1314.github.io/categories/data-struct/"/>
-    
-    
-      <category term="博客" scheme="https://huangguolong1314.github.io/tags/%E5%8D%9A%E5%AE%A2/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>CAP理论&amp;BASE理论.</title>
-    <link href="https://huangguolong1314.github.io/2023/07/18/cap&amp;base/CAP%E7%90%86%E8%AE%BA&amp;BASE%E7%90%86%E8%AE%BA/"/>
-    <id>https://huangguolong1314.github.io/2023/07/18/cap&amp;base/CAP%E7%90%86%E8%AE%BA&amp;BASE%E7%90%86%E8%AE%BA/</id>
-    <published>2023-07-18T12:00:00.000Z</published>
-    <updated>2023-07-18T13:08:31.635Z</updated>
-    
-    <content type="html"><![CDATA[<ol><li><p><code>C（    Consistency）</code>一致性：意思是，写操作之后的读操作，必须返回该值，举例：某条数据记录是v0，用户向G1发起一个写操作，将其改为v1，接下来，用户的读操作就会得到v1，这就叫一致性。问题是，用户有可能向G2发起该操作，由于G2的值没有发生变化，因此返回的是v1，G1和G2读操作的结果不一致，这就不满足一致性了。<br><img src= "/img/loading.gifs" data-src="/images/cap&base/1.png" alt=""><br>为了让G2也能变为G1，就要在G1写操作的时候，让G1和G2发送一条消息，要求G2页改成v1，这样的话，用户向G2发起读操作，也能得到v1。</p></li><li><p><code>A（    Availability）</code>可用性：意思是只要收到用户的请求，服务器就必须给出回应，用户可以选择向G1或G2发起读操作，不管是哪台服务器，只要收到请求，就必须告诉用户，到底是v0还是v1，否则就不满足可用性。</p></li><li><p><code>P（    Partition tolerance）</code>分区容错：大多数分布式系统都分布在多个子网络，每个子网络就叫做一个区，分区容错的意思是，区间通信可能失败，比如一台服务器放在中国，另一台服务器放在美国，这就是两个区，它们之间可能无法通信，在系统设计的时候必须考虑到这种情况。<br><img src= "/img/loading.gifs" data-src="/images/cap&base/2.png" alt=""><br><code>C（Consistency）和A（Availability）</code>的矛盾：一致性和可用性，为什么不可能同时成立？因为可能通信失败（即出现分区容错）。如果保证G2的一致性，那么G1必须在写 操作时，锁定G2的读操作和鞋操作，只有数据同步后，才能重新开放读写，锁定期间G2不能读写，没有可用性。如果保证G2的可用性，那么势必不能锁定G2，所以一致性就不成立。综上所述，G2无法同时做到一致性和可用性，系统设计时只能选择一个目标，如果追求一致性，那么无法保证所有节点的可用性；如果追求所有节点的可用性，那就没法做到一致性。<br>在什么场合，可用性高于一致性？<br>举例来说，发布一张网页到CDN，多个服务器有这张网页的副本，后来发现一个错误，需要更新网页，这时只能每个服务器都更新一遍，一般来说，网页的更新不是特别强调一致性。短时期内，一些用户拿到老版本，另一些用户拿到新版本，问题不会特别大。当然所有人最终都会看到新版本。所以这个场合就是可用性高于一致性。</p></li></ol><p><code>Consistency（一致性-节点系统中所有可用的数据）</code>：在分布式环境下，一致性是指数据在多个副本之间能否保持一致的特性。在一致性的需求下，当一个系统在数据一致的状态下执行更新操作后，应该保证系统的数据仍然处于一致的状态；<br><code>Availability（可用性-每个请求会得到一个响应）</code>：可用性是指系统提供的服务必须一直处于可用的状态，对于用户的每一个操作请求总是能够在有限的时间内返回结果。这里的重点是“有限时间内”和“返回结果”；<br><code>Partition Tolerance（分区容错性-系统运作将不管可用性、分区、数据或通信的丢失）</code>：分区容错性约束了一个分布式系统具有如下特性：分布式系统在遇到任何网络分区故障的时候，仍然需要能够保证对外提供一致性和可用性的服务，除非是整个网络环境都发生了故障；</p><ol start="4"><li>BASE<br><code>Basically Available（基本可用）</code>：分布式系统在出现不可预知故障的时候，允许损失部分可用性；<br><code>Soft state（软状态）</code>：软状态也称为弱状态，和硬状态相对，是指允许系统中的数据存在中间状态，并认为该中间状态的存在不会影响系统的整体可用性，即允许系统在不通节点的数据副本之间进行数据同步的过程存在延时；<br><code>Eventually consistent（最终一致性）</code>：最终一致性强调的是系统中所有的数据副本，在经过一段时间的同步后，最终能够达到一个一致的状态。因此，最终一致性的本质是需要系统保证最终数据能够达到一致，而不需要实时保证系统数据的强一致性；</li></ol>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;ol&gt;
-&lt;li&gt;&lt;p&gt;&lt;code&gt;C（    Consistency）&lt;/code&gt;一致性：意思是，写操作之后的读操作，必须返回该值，举例：某条数据记录是v0，用户向G1发起一个写操作，将其改为v1，接下来，用户的读操作就会得到v1，这就叫一致性。问题是，用户有可能向G2发起该
-      
-    
-    </summary>
-    
-    
-      <category term="cap&amp;base" scheme="https://huangguolong1314.github.io/categories/cap-base/"/>
     
     
       <category term="博客" scheme="https://huangguolong1314.github.io/tags/%E5%8D%9A%E5%AE%A2/"/>
